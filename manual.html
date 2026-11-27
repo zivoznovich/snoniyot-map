@@ -15,9 +15,16 @@
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
 .wrap{max-width:760px;margin:0 auto;background:var(--paper);padding:calc(env(safe-area-inset-top,0px) + 20px) max(20px,env(safe-area-inset-right,0px)) 48px max(20px,env(safe-area-inset-left,0px))}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;font:600 14px var(--sans)}
-.top a{color:var(--accent);text-decoration:none}
-.top span{color:var(--dim)}
+/* sticky bar: back to the map and chapter jump from anywhere */
+.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;margin:calc(-1 * (env(safe-area-inset-top,0px) + 20px)) -20px 0;
+  padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.bar a,.bar select{height:40px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 15px var(--sans)}
+.bar .mapbtn{display:inline-flex;align-items:center;padding:0 14px;text-decoration:none;background:var(--accent);border-color:var(--accent);color:#fff;flex:none}
+.bar .sel{flex:1;min-width:0}
+.bar select{width:100%;padding:0 10px}
+.bar .up{display:inline-grid;place-items:center;width:40px;text-decoration:none;flex:none}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.back{display:inline-block;margin-top:14px;font:600 13px var(--sans);color:var(--dim);text-decoration:none}
 header{border-bottom:2px solid var(--ink);padding:28px 0 18px;margin-bottom:8px}
 header .k{font:700 12px var(--mono);letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
 h1{font-size:32px;line-height:1.15;margin:6px 0 8px;text-wrap:balance}
@@ -27,7 +34,7 @@ nav b{font:700 12px var(--mono);letter-spacing:.12em;color:var(--dim)}
 nav ol{margin:8px 0 0;padding-left:22px;columns:2;column-gap:28px;font-size:15px}
 nav a{color:var(--ink)}
 @media (max-width:560px){nav ol{columns:1}}
-h2{font-size:22px;margin:40px 0 10px;padding-top:12px;border-top:1px solid var(--line);scroll-margin-top:16px}
+h2{font-size:22px;margin:40px 0 10px;padding-top:12px;border-top:1px solid var(--line);scroll-margin-top:72px}
 h2 .n{font:700 14px var(--mono);color:var(--accent);margin-right:10px}
 h3{font-size:17px;margin:24px 0 6px}
 p,li{max-width:68ch}
@@ -46,7 +53,7 @@ code,kbd{font:600 14px var(--mono);background:var(--bg);border:1px solid var(--l
 .warn b{color:var(--warn)} .note b{color:var(--zone)}
 .shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:16px 0}
 figure{margin:0}
-figure img{width:100%;max-width:100%;border-radius:14px;border:1px solid var(--line);display:block}
+figure img{width:100%;height:auto;max-width:100%;border-radius:14px;border:1px solid var(--line);display:block}
 figcaption{font-size:13px;color:var(--dim);margin-top:6px;line-height:1.4}
 .hero{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:24px;align-items:start;margin:16px 0}
 @media (max-width:600px){.hero{grid-template-columns:1fr}.hero figure{max-width:280px}}
@@ -62,14 +69,19 @@ figcaption{font-size:13px;color:var(--dim);margin-top:6px;line-height:1.4}
 .check li::before{content:"";position:absolute;left:2px;top:5px;width:14px;height:14px;border:2px solid var(--ink);border-radius:3px}
 footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--dim)}
 a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-@media print{body{background:#fff}.wrap{max-width:none;padding:0}.top{display:none}h2{break-after:avoid}figure,table{break-inside:avoid}}
+@media print{body{background:#fff}.wrap{max-width:none;padding:0}.bar,.back{display:none}h2{break-after:avoid}figure,table{break-inside:avoid}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<div class="top"><a href="./">← Back to map</a><span>Version 2026-11-27</span></div>
+<div class="wrap" id="top">
+<div class="bar" role="navigation" aria-label="Manual navigation">
+  <a class="mapbtn" href="./">← Map</a>
+  <label class="sel"><span class="vh">Jump to chapter</span>
+    <select id="jump" aria-label="Jump to chapter"><option value="">Chapters…</option></select></label>
+  <a class="up" href="#top" aria-label="Back to top">↑</a>
+</div>
 
-<header>
+<header style="padding-top:18px">
   <div class="k">User manual</div>
   <h1>Snoniyot Moving Map</h1>
   <p>A phone moving map for the Snoniyot training areas: zones, reporting points, your aircraft position and flight track. Works without mobile signal once the map has been downloaded.</p>
@@ -77,7 +89,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 <div class="warn"><b>Orientation aid only</b>This app is not certified navigation equipment and does not replace the aircraft instruments, the approved charts or ATC instructions. Zone boundaries come from a September 2010 map and may have changed. Check current publications before flying.</div>
 
-<nav aria-label="Contents"><b>CONTENTS</b>
+<nav id="contents" aria-label="Contents"><b>CONTENTS</b>
 <ol>
   <li><a href="#setup">First-time setup</a></li>
   <li><a href="#screen">The screen</a></li>
@@ -108,7 +120,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 <h3>If location is blocked</h3>
 <p>If the phone refuses location, a card with the steps below opens at the bottom of the screen. Follow them and tap <b>Try again</b>.</p>
 <div class="hero">
-  <figure><img src="manual/loc.jpg" alt="Location access card with three setup steps and Try again button" loading="lazy"><figcaption>The location help card.</figcaption></figure>
+  <figure><img src="manual/loc.jpg" width="780" height="1328" alt="Location access card with three setup steps and Try again button" loading="lazy"><figcaption>The location help card.</figcaption></figure>
   <div>
     <ol>
       <li><b>Settings</b> → <b>Privacy &amp; Security</b> → <b>Location Services</b>: On.</li>
@@ -122,7 +134,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 <h2 id="screen"><span class="n">02</span>The screen</h2>
 <p>The map fills the whole screen. Everything else is a small overlay that you can reach with your thumb.</p>
 <div class="hero">
-  <figure><img src="manual/main.jpg" alt="Main screen showing zone badge, help button, aircraft, track and control buttons" loading="lazy"><figcaption>Main screen, north up, “No background” mode.</figcaption></figure>
+  <figure><img src="manual/main.jpg" width="780" height="1328" alt="Main screen showing zone badge, help button, aircraft, track and control buttons" loading="lazy"><figcaption>Main screen, north up, “No background” mode.</figcaption></figure>
   <ol class="callouts">
     <li><b>Zone badge</b> (top centre). Shows <i>ZONE</i> and the number of the zone you are in. It is hidden when you are outside all zones. The zone you are in is also shaded a little darker on the map.</li>
     <li><b>Compass</b> (top left). Appears only when the map is rotated. The red needle points to true north. Tap it to return to north up.</li>
@@ -154,8 +166,8 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 <tr><td><b>Not following</b></td><td>Grey, crosshair</td><td>The map stays where you left it.</td><td>Centre on the aircraft again, in the last orientation used</td></tr>
 </tbody></table></div>
 <div class="shots">
-  <figure><img src="manual/track.jpg" alt="Track-up mode with compass visible" loading="lazy"><figcaption>Track up: the aircraft points up and the compass shows north.</figcaption></figure>
-  <figure><img src="manual/free.jpg" alt="Map moved by hand, crosshair button visible" loading="lazy"><figcaption>After a one-finger pan: following stops and the button turns grey.</figcaption></figure>
+  <figure><img src="manual/track.jpg" width="780" height="1328" alt="Track-up mode with compass visible" loading="lazy"><figcaption>Track up: the aircraft points up and the compass shows north.</figcaption></figure>
+  <figure><img src="manual/free.jpg" width="780" height="1328" alt="Map moved by hand, crosshair button visible" loading="lazy"><figcaption>After a one-finger pan: following stops and the button turns grey.</figcaption></figure>
 </div>
 <ul>
   <li><b>Moving the map with one finger</b> stops following. If you don't touch the map for <b>20 seconds</b>, it returns to the aircraft by itself.</li>
@@ -177,7 +189,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 </tbody></table></div>
 <h3>What changes with zoom</h3>
 <p>Labels shrink as you zoom out so the map doesn't clutter. Zoomed far out, the point names disappear and only triangles and zone numbers remain. Zoomed out over the whole country, only the zone outlines and numbers remain. The aircraft always keeps the same size.</p>
-<figure style="max-width:260px;margin:12px 0"><img src="manual/wide.jpg" alt="Zoomed-out view with zone numbers and small triangles" loading="lazy"><figcaption>Zoomed out: zone numbers and small triangles only.</figcaption></figure>
+<figure style="max-width:260px;margin:12px 0"><img src="manual/wide.jpg" width="780" height="1328" alt="Zoomed-out view with zone numbers and small triangles" loading="lazy"><figcaption>Zoomed out: zone numbers and small triangles only.</figcaption></figure>
 
 <h2 id="modes"><span class="n">05</span>Map modes</h2>
 <div class="tbl"><table>
@@ -195,7 +207,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   <li>Hiding the track does not stop the recording. Show it again and the whole flight is there.</li>
   <li>Clearing needs two taps within 3 seconds, so a stray touch in flight can't erase it.</li>
 </ul>
-<figure style="max-width:260px;margin:12px 0"><img src="manual/clear.jpg" alt="Clear button turned red with the message Tap again to clear track" loading="lazy"><figcaption>First tap on Clear: the button turns red and asks for a second tap.</figcaption></figure>
+<figure style="max-width:260px;margin:12px 0"><img src="manual/clear.jpg" width="780" height="1328" alt="Clear button turned red with the message Tap again to clear track" loading="lazy"><figcaption>First tap on Clear: the button turns red and asks for a second tap.</figcaption></figure>
 
 <h2 id="data"><span class="n">07</span>Zones and reporting points</h2>
 <h3>Zones</h3>
@@ -282,5 +294,15 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   Orientation aid only. Not for primary navigation.
 </footer>
 </div>
+<script>
+// fill the chapter menu from the headings; add a "contents" link after each chapter
+const sel=document.getElementById('jump');
+document.querySelectorAll('h2[id]').forEach(h=>{ const o=document.createElement('option'); o.value=h.id;
+  o.textContent=h.querySelector('.n').textContent+'  '+h.textContent.replace(h.querySelector('.n').textContent,'').trim(); sel.appendChild(o); });
+sel.addEventListener('change',()=>{ if(sel.value){ document.getElementById(sel.value).scrollIntoView(); history.replaceState(null,'','#'+sel.value); } sel.value=''; });
+document.querySelectorAll('h2[id]').forEach(h=>{ let n=h.nextElementSibling, lastEl=h;
+  while(n && n.tagName!=='H2' && n.tagName!=='FOOTER'){ lastEl=n; n=n.nextElementSibling; }
+  const a=document.createElement('a'); a.className='back'; a.href='#contents'; a.textContent='↑ Contents'; lastEl.after(a); });
+</script>
 </body>
 </html>
