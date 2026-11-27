@@ -762,12 +762,16 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .acc{fill:#fff;fill-opacity:.12;stroke:#fff;stroke-opacity:.7;stroke-width:1}
 /* zone label: solid pill, centred exactly on its anchor */
 .zl,.pt{width:0!important;height:0!important;margin:0!important}
-.zl div{position:absolute;left:0;top:0;transform:translate(-50%,-50%);background:#1747e6;color:#fff;border:2px solid #fff;
+.zl div{position:absolute;left:0;top:0;transform:translate(-50%,-50%) scale(var(--zs,1));background:#1747e6;color:#fff;border:2px solid #fff;
   border-radius:9px;padding:3px 9px 4px;text-align:center;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.35);font-family:var(--sans)}
 .zl b{display:block;font:800 20px/1.05 var(--mono)}
 .zl span{display:block;font:700 11px/1.2 var(--mono);opacity:.9;direction:ltr}
+/* zoom-dependent detail: names and ranges drop out as the view widens */
+.lv-mid .pt span{font-size:12px}
+.lv-far .zl span,.lv-far .pt span,.lv-wide .zl span{display:none}
+.lv-wide .pt{display:none}
 /* reporting point: triangle whose centroid sits on the coordinate, name in a white tag below */
-.pt div{position:absolute;left:0;top:0;transform:translate(-50%,-11px);display:flex;flex-direction:column;align-items:center;white-space:nowrap}
+.pt div{position:absolute;left:0;top:0;transform:translate(-50%,-11px) scale(var(--ps,1));transform-origin:50% 11px;display:flex;flex-direction:column;align-items:center;white-space:nowrap}
 .pt i{width:0;height:0;border-left:9.5px solid transparent;border-right:9.5px solid transparent;border-bottom:16px solid #0b0f12;
   filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1px #fff)}
 .pt span{margin-top:3px;background:rgba(255,255,255,.95);color:#0b0f12;font:700 13px/1 var(--sans);padding:3px 6px 4px;border-radius:5px;
@@ -876,9 +880,9 @@ const Embedded=L.GridLayer.extend({createTile(c){const img=document.createElemen
 base.scan=new Embedded({data:SCAN,mime:'data:image/jpeg;base64,',minNativeZoom:9,maxNativeZoom:14,maxZoom:16});
 
 // zones, labels, reporting points (vector)
-const zoneLayers={}, vec=L.layerGroup(), hl=L.layerGroup().addTo(map);
+const casings=[], zoneLayers={}, vec=L.layerGroup(), hl=L.layerGroup().addTo(map);
 for(const z of DATA.zones){
-  L.polygon(z.poly,{color:'#fff',weight:6,opacity:.9,fill:false,interactive:false}).addTo(vec);
+  casings.push(L.polygon(z.poly,{color:'#fff',weight:6,opacity:.9,fill:false,interactive:false}).addTo(vec));
   zoneLayers[z.id]=L.polygon(z.poly,{color:'#1747e6',weight:3,opacity:1,fillColor:'#1747e6',fillOpacity:.06,interactive:false}).addTo(vec);
   const band=z.band?`<span>${z.band[0]}–${z.band[1]}</span>`:'';
   L.marker(z.label,{interactive:false,keyboard:false,icon:L.divIcon({className:'zl',iconSize:[0,0],html:`<div><b>${z.id}</b>${band}</div>`})}).addTo(vec);
@@ -905,6 +909,16 @@ function updScale(){
   $('scalebar').style.width=(m/mpp)+'px'; $('scaletxt').textContent=(m/NM)+' NM';
 }
 map.on('zoomend moveend',updScale); updScale();
+
+/* label size follows zoom: full at 12+, shrinking to half at 9; detail removed in steps */
+function updLabels(){
+  const z=map.getZoom(), el=map.getContainer(), cl=(a,b)=>Math.max(a,Math.min(b,(z-9)/3*(b-a)+a));
+  el.style.setProperty('--zs',cl(.5,1).toFixed(3)); el.style.setProperty('--ps',cl(.65,1).toFixed(3));
+  el.classList.toggle('lv-mid',z>=10.75&&z<12); el.classList.toggle('lv-far',z>=9.25&&z<10.75); el.classList.toggle('lv-wide',z<9.25);
+  const w=z<10.5?[2,4]:[3,6];
+  for(const id in zoneLayers) zoneLayers[id].setStyle({weight:w[0]}); casings.forEach(c=>c.setStyle({weight:w[1]}));
+}
+map.on('zoomend',updLabels); updLabels();
 
 /* ---------- own ship ---------- */
 const accCircle=L.circle([0,0],{radius:0,className:'acc',interactive:false});
