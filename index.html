@@ -704,7 +704,7 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 #ctl button svg{width:26px;height:26px}
 #ctl #follow{background:var(--accent);border-color:var(--accent);color:#fff}
 #ctl #follow[data-mode="free"]{background:var(--panel2);border-color:var(--line);color:var(--ink)}
-#follow svg{display:none} #follow[data-mode="free"] .i-free,#follow[data-mode="north"] .i-north,#follow[data-mode="track"] .i-track{display:block}
+#follow svg{display:none} #follow[data-mode="free"] .i-free,#follow[data-mode="north"] .i-north,#follow[data-mode="manual"] .i-north,#follow[data-mode="track"] .i-track{display:block}
 #compass{position:fixed;z-index:1000;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(12px,calc(env(safe-area-inset-left,0px) + 12px));
   width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:rgba(13,20,24,.92);padding:0;display:grid;place-items:center;
   box-shadow:0 2px 10px rgba(0,0,0,.35)}
@@ -863,7 +863,7 @@ function edgeDist(p,poly){ // metres to nearest edge, local flat projection
   return m;}
 
 /* ---------- map & layers ---------- */
-const map=L.map('map',{rotate:true,bearing:0,touchRotate:false,shiftKeyRotate:false,rotateControl:false,compassBearing:false,zoomControl:false,minZoom:7,maxZoom:16,zoomSnap:0.25,zoomDelta:0.5,
+const map=L.map('map',{rotate:true,bearing:0,touchRotate:false,touchGestures:false,touchZoom:false,doubleClickZoom:false,shiftKeyRotate:false,rotateControl:false,compassBearing:false,zoomControl:false,minZoom:7,maxZoom:16,zoomSnap:0.25,zoomDelta:0.5,
   maxBounds:[[29.3,33.6],[33.6,36.2]],maxBoundsViscosity:0.7,attributionControl:true});
 map.attributionControl.setPrefix(false).setPosition('bottomleft');
 const BOUNDS=[[31.17,34.32],[31.67,34.95]];
@@ -936,20 +936,80 @@ let acShown=false, follow=true, last=null, lastFix=0, wasIn=null;
 // Dragging the map stops following (orientation is kept); after 20 s untouched it resumes.
 // Map bearing follows the CSS convention: +B turns the map B degrees clockwise, so track-up uses B = -track.
 let refollowT=null, orient=store.get('orient','north'), trackDeg=null, bearing=0, bearingGoal=0, rafB=null;
-const ORIENT_NAME={north:'צפון למעלה',track:'כיוון טיסה למעלה'};
+const ORIENT_NAME={north:'צפון למעלה',track:'כיוון טיסה למעלה',manual:'סיבוב ידני'};
 function updFollowBtn(){ $('follow').dataset.mode=follow?orient:'free';
   $('follow').setAttribute('aria-label',follow?ORIENT_NAME[orient]:'מעקב כבוי – הקש למרכוז'); }
 function norm(a){ return ((a%360)+540)%360-180; }
 function stepBearing(){ const d=norm(bearingGoal-bearing);
   bearing = Math.abs(d)<0.5 ? bearingGoal : bearing+d*0.25; map.setBearing(bearing); drawBearing();
   rafB = Math.abs(norm(bearingGoal-bearing))>0.01 ? requestAnimationFrame(stepBearing) : null; }
-function aimBearing(){ bearingGoal = orient==='track' && trackDeg!=null ? -trackDeg : 0; if(!rafB) rafB=requestAnimationFrame(stepBearing); }
+function aimBearing(){ if(orient==='manual') return; bearingGoal = orient==='track' && trackDeg!=null ? -trackDeg : 0; if(!rafB) rafB=requestAnimationFrame(stepBearing); }
 function drawBearing(){ $('compass').hidden=Math.abs(norm(bearing))<1; document.getElementById('needle').setAttribute('transform','rotate('+bearing+')');
   const g=document.getElementById('acg'); if(g&&last) g.setAttribute('transform','rotate('+((last.hdg||0)+bearing)+')'); }
 function setFollow(v){ follow=v; clearTimeout(refollowT); updFollowBtn();
   if(v){ if(last) map.panTo(last.ll,{animate:true}); aimBearing(); } else refollowT=setTimeout(()=>setFollow(true),20000); }
 function setOrient(o){ orient=o; store.set('orient',o); updFollowBtn(); aimBearing(); }
 $('follow').onclick=()=>{ if(!follow){ setFollow(true); toast(ORIENT_NAME[orient]); } else { setOrient(orient==='north'?'track':'north'); toast(ORIENT_NAME[orient]); } };
+
+/* ---------- touch gestures, as in phone map apps ----------
+   two fingers: pinch zoom + pan; rotation only after a deliberate 15° twist
+   double tap: zoom in · two-finger tap: zoom out · double tap then drag: one-finger zoom (down = in)
+   while following the aircraft, zoom and rotation pivot on the aircraft so it stays centred */
+(function(){
+  const el=map.getContainer(), ROT_THRESHOLD=15, TAP_MS=300, TAP_PX=30;
+  let g=null, lastTap=null, touchStartT=0, startPt=null, maxMove=0;
+  const pt=t=>{ const r=el.getBoundingClientRect(); return L.point(t.clientX-r.left,t.clientY-r.top); };
+  const ang=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;
+  function setBearingNow(b){ if(rafB){ cancelAnimationFrame(rafB); rafB=null; } bearing=b; bearingGoal=b; map.setBearing(b); drawBearing(); }
+  function zoomAt(z,cp){ z=Math.max(map.getMinZoom(),Math.min(map.getMaxZoom(),z));
+    if(follow&&last) map.setView(last.ll,z,{animate:false}); else if(!cp) map.setZoom(z,{animate:false}); else map.setZoomAround(cp,z,{animate:false}); }
+  function startUserRotate(){ if(orient!=='manual'){ orient='manual'; updFollowBtn(); } }
+  el.addEventListener('touchstart',e=>{
+    const n=e.touches.length;
+    if(n===2){
+      const a=pt(e.touches[0]), b=pt(e.touches[1]), mid=a.add(b).divideBy(2);
+      g={k:'pinch',d0:a.distanceTo(b),a0:ang(a,b),z0:map.getZoom(),b0:bearing,anchor:map.containerPointToLatLng(mid),rot:false,rotOff:0,t0:Date.now(),moved:false,mid0:mid};
+      map.dragging.disable(); e.preventDefault(); return;
+    }
+    if(n===1){
+      const p=pt(e.touches[0]); touchStartT=Date.now(); startPt=p; maxMove=0;
+      if(lastTap && Date.now()-lastTap.t<TAP_MS && p.distanceTo(lastTap.p)<TAP_PX){
+        g={k:'dtap',y0:p.y,z0:map.getZoom(),p:p,moved:false}; lastTap=null; map.dragging.disable(); e.preventDefault();
+      }
+    }
+  },{passive:false});
+  el.addEventListener('touchmove',e=>{
+    if(!g){ if(e.touches.length===1&&startPt) maxMove=Math.max(maxMove,pt(e.touches[0]).distanceTo(startPt)); return; }
+    e.preventDefault();
+    if(g.k==='pinch' && e.touches.length===2){
+      const a=pt(e.touches[0]), b=pt(e.touches[1]), mid=a.add(b).divideBy(2), s=a.distanceTo(b)/g.d0;
+      let da=((ang(a,b)-g.a0)%360+540)%360-180;
+      if(!g.rot && Math.abs(da)>ROT_THRESHOLD){ g.rot=true; g.rotOff=Math.sign(da)*ROT_THRESHOLD; startUserRotate(); }
+      if(Math.abs(s-1)>0.03||g.rot||mid.distanceTo(g.mid0)>8) g.moved=true;
+      if(g.rot) setBearingNow(g.b0+da-g.rotOff);
+      const z=g.z0+Math.log2(s);
+      map.setZoom(Math.max(map.getMinZoom(),Math.min(map.getMaxZoom(),z)),{animate:false});
+      if(!follow){ const cur=map.latLngToContainerPoint(g.anchor); map.panBy(cur.subtract(mid),{animate:false}); }
+      else if(last) map.setView(last.ll,map.getZoom(),{animate:false});
+    } else if(g.k==='dtap' && e.touches.length===1){
+      const p=pt(e.touches[0]), dy=p.y-g.y0; if(Math.abs(dy)>8) g.moved=true;
+      if(g.moved) zoomAt(g.z0+dy/110, g.p);
+    }
+  },{passive:false});
+  el.addEventListener('touchend',e=>{
+    if(g && g.k==='pinch'){
+      if(e.touches.length<2){
+        if(!g.moved && Date.now()-g.t0<280) zoomAt(Math.round(map.getZoom())-1, follow?null:g.mid0);   // two-finger tap
+        g=null; if(e.touches.length===0) map.dragging.enable();
+      }
+      return;
+    }
+    if(g && g.k==='dtap'){ if(!g.moved) zoomAt(Math.round(map.getZoom())+1, g.p); g=null; map.dragging.enable(); return; }
+    if(e.touches.length===0 && startPt && Date.now()-touchStartT<250 && maxMove<10) lastTap={t:Date.now(),p:startPt};
+    if(e.touches.length===0) map.dragging.enable();
+  });
+  el.addEventListener('touchcancel',()=>{ g=null; map.dragging.enable(); });
+})();
 $('compass').onclick=()=>{ setOrient('north'); if(!follow) setFollow(true); toast(ORIENT_NAME.north); };
 map.on('dragstart',()=>setFollow(false));
 updFollowBtn();
