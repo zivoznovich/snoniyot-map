@@ -49,8 +49,8 @@ td.he{direction:rtl;text-align:right;font-weight:700;white-space:nowrap}
 code,kbd{font:600 14px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
 .note,.warn{border-left:4px solid var(--zone);background:var(--note);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
 .warn{border-left-color:var(--warn)}
-.note b,.warn b{display:block;font:700 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
-.warn b{color:var(--warn)} .note b{color:var(--zone)}
+.note>b:first-child,.warn>b:first-child{display:block;font:700 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.warn>b:first-child{color:var(--warn)} .note>b:first-child{color:var(--zone)}
 .shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:16px 0}
 figure{margin:0}
 figure img{width:100%;height:auto;max-width:100%;border-radius:14px;border:1px solid var(--line);display:block}
@@ -87,7 +87,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 [dir=rtl] .check li::before{left:auto;right:2px}
 [dir=rtl] .note,[dir=rtl] .warn{border-left:0;border-right:4px solid var(--zone);border-radius:8px 0 0 8px}
 [dir=rtl] .warn{border-right-color:var(--warn)}
-[dir=rtl] .note b,[dir=rtl] .warn b{letter-spacing:0;font-family:var(--sans);font-size:13px}
+[dir=rtl] .note>b:first-child,[dir=rtl] .warn>b:first-child{letter-spacing:0;font-family:var(--sans);font-size:13px}
 [dir=rtl] th{letter-spacing:0}
 [dir=rtl] header .k,[dir=rtl] nav b{letter-spacing:0;font-family:var(--sans);font-size:13px}
 [dir=rtl] td.num{direction:ltr;text-align:right}
