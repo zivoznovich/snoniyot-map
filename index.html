@@ -703,13 +703,13 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
   font-size:22px;box-shadow:0 2px 10px rgba(0,0,0,.35);display:grid;place-items:center}
 #ctl button svg{width:26px;height:26px}
 #ctl #follow{background:var(--accent);border-color:var(--accent);color:#fff}
-#scale{position:fixed;z-index:999;left:max(12px,calc(env(safe-area-inset-left,0px) + 12px));bottom:calc(env(safe-area-inset-bottom,0px) + 14px);
+#scale{position:fixed;z-index:999;left:max(12px,calc(env(safe-area-inset-left,0px) + 12px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);
   background:rgba(13,20,24,.85);padding:4px 8px 6px;border-radius:6px;font:600 12px var(--mono);direction:ltr}
 #dlchip{position:fixed;z-index:999;left:max(12px,calc(env(safe-area-inset-left,0px) + 12px));bottom:calc(env(safe-area-inset-bottom,0px) + 58px);
   background:rgba(13,20,24,.85);color:var(--ink);padding:5px 9px;border-radius:6px;font:600 12px var(--sans)}
 #scalebar{height:6px;border:2px solid var(--ink);border-top:0;margin-top:2px}
-.leaflet-control-attribution{font-size:9px!important;background:rgba(255,255,255,.6)!important;
-  margin-bottom:calc(env(safe-area-inset-bottom,0px) + 56px)!important;direction:ltr}
+.leaflet-control-attribution{font:500 8px/1.2 var(--sans)!important;background:none!important;color:rgba(255,255,255,.55)!important;
+  padding:0 0 0 2px!important;margin:0 0 calc(env(safe-area-inset-bottom,0px) + 2px) max(12px,env(safe-area-inset-left,0px))!important;direction:ltr;pointer-events:none}
 
 /* bottom sheet */
 #scrim{position:fixed;inset:0;z-index:1001;background:rgba(0,0,0,.35)}
@@ -866,15 +866,14 @@ const TILE_URL={
 const ATTR='Tiles © Esri';
 let tileErrors=0;
 const base={
-  sat:L.tileLayer(TILE_URL.sat,{className:'sat',maxNativeZoom:14,maxZoom:16,crossOrigin:true,attribution:ATTR+' — Maxar, Earthstar'}),
-  topo:L.tileLayer(TILE_URL.topo,{maxNativeZoom:14,maxZoom:16,crossOrigin:true,attribution:ATTR+', HERE, OSM'})};
+  sat:L.tileLayer(TILE_URL.sat,{className:'sat',maxNativeZoom:14,maxZoom:16,crossOrigin:true,attribution:'Esri, Maxar'}),
+  topo:L.tileLayer(TILE_URL.topo,{maxNativeZoom:14,maxZoom:16,crossOrigin:true,attribution:'Esri, HERE, OSM'})};
 for(const k in base){ base[k].on('tileerror',e=>{ const b=map.unproject(e.coords.scaleBy(L.point(256,256)).add([128,128]),e.coords.z);
     if(!L.latLngBounds(BOUNDS).contains(b)) return; if(++tileErrors===6) banner('אין מפת רקע – בחר "מקורית" בתפריט',8000); });
   base[k].on('tileload',()=>{tileErrors=0;}); }
 const Embedded=L.GridLayer.extend({createTile(c){const img=document.createElement('img');img.alt='';
   const d=this.options.data[c.z+'/'+c.x+'/'+c.y]; if(d) img.src=this.options.mime+d; return img;}});
-base.scan=new Embedded({data:SCAN,mime:'data:image/jpeg;base64,',minNativeZoom:9,maxNativeZoom:14,maxZoom:16,
-  attribution:'מפת אזורי טיסה סנוניות 1:100,000'});
+base.scan=new Embedded({data:SCAN,mime:'data:image/jpeg;base64,',minNativeZoom:9,maxNativeZoom:14,maxZoom:16});
 
 // zones, labels, reporting points (vector)
 const zoneLayers={}, vec=L.layerGroup(), hl=L.layerGroup().addTo(map);
