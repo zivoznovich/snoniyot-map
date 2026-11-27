@@ -886,7 +886,7 @@ const casings=[], zoneLayers={}, vec=L.layerGroup(), hl=L.layerGroup().addTo(map
 for(const z of DATA.zones){
   casings.push(L.polygon(z.poly,{color:'#fff',weight:6,opacity:.9,fill:false,interactive:false}).addTo(vec));
   zoneLayers[z.id]=L.polygon(z.poly,{color:'#1747e6',weight:3,opacity:1,fillColor:'#1747e6',fillOpacity:.06,interactive:false}).addTo(vec);
-  const band=z.band?`<span>${z.band[0]}–${z.band[1]}</span>`:'';
+  const band='';   // zone altitudes intentionally not shown
   L.marker(z.label,{interactive:false,keyboard:false,icon:L.divIcon({className:'zl',iconSize:[0,0],html:`<div><b>${z.id}</b>${band}</div>`})}).addTo(vec);
 }
 const ptMarkers=DATA.points.map(p=>L.marker(p.ll,{interactive:false,keyboard:false,
