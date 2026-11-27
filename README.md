@@ -1,8 +1,8 @@
-# מפה נעה – סנוניות
+# Snoniyot Moving Map
 
-מפה נעה לטלפון לטיסה באזורי האימון: אזורים, נקודות דיווח, מיקום המטוס ומסלול הטיסה.
+Phone moving map for the training areas: zones, reporting points, aircraft position and flight track.
 
-- כתובת: https://zivoznovich.github.io/snoniyot-map/
-- מקור: מפת אזורי טיסה סנוניות 1:100,000, ספטמבר 2010, מעוגנת לפי רשת UTM (ED50).
-- מצבי מפה: לוויין, טופו, ללא רקע. מפות הרקע (Esri) יורדות אוטומטית בפתיחה הראשונה עם קליטה ונשמרות לשימוש בלי קליטה.
-- כלי עזר להתמצאות בלבד.
+- Live: https://zivoznovich.github.io/snoniyot-map/
+- Source: Snoniyot training areas map 1:100,000 (September 2010), georeferenced to its UTM grid (ED50).
+- Map modes: satellite, topo, no background. Base maps (Esri) download automatically on first open with signal and are kept for offline use.
+- Orientation aid only.

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon.png">
-<title>מפה נעה – סנוניות</title>
+<title>Snoniyot Moving Map</title>
 <style>/* required styles */
 
 .leaflet-pane,
@@ -803,28 +803,28 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 <div id="scale"><div id="scaletxt">1 km</div><div id="scalebar" style="width:60px"></div></div>
 
 <div id="ctl">
-  <button id="mapbtn" aria-label="החלף מפת רקע"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/></svg></button>
-  <button id="trackbtn" aria-pressed="true" aria-label="הצג או הסתר נתיב"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 18H14a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h5.8"/><path class="slash" d="M3.5 3.5l17 17"/></svg></button>
-  <button id="clearbtn" aria-label="נקה נתיב"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l.9 12.5h9.2L17.5 7"/></svg></button>
-  <button id="follow" data-mode="north" aria-label="מצב מפה">
+  <button id="mapbtn" aria-label="Change base map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/></svg></button>
+  <button id="trackbtn" aria-pressed="true" aria-label="Show or hide track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 18H14a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h5.8"/><path class="slash" d="M3.5 3.5l17 17"/></svg></button>
+  <button id="clearbtn" aria-label="Clear track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l.9 12.5h9.2L17.5 7"/></svg></button>
+  <button id="follow" data-mode="north" aria-label="Map mode">
     <svg class="i-free" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
     <svg class="i-north" viewBox="0 0 24 24"><path d="M12 1.6 16.2 8.4H7.8Z" fill="currentColor"/><text x="12" y="22" text-anchor="middle" font-size="13" font-weight="900" font-family="Arial,Helvetica,sans-serif" fill="currentColor">N</text></svg>
     <svg class="i-track" viewBox="0 0 24 24"><path d="M12 2.8 19.2 20 12 16.2 4.8 20z" fill="currentColor"/></svg>
   </button>
 </div>
 <div id="toast" role="status" hidden></div>
-<button id="compass" hidden aria-label="צפון למעלה"><svg viewBox="-20 -20 40 40"><g id="needle"><path d="M0-9 4.2 1H-4.2Z" fill="#ff5a5a"/><path d="M0 11 4.2 1H-4.2Z" fill="#cfd8dc"/><text x="0" y="-11" text-anchor="middle" font-size="8.5" font-weight="900" font-family="Arial,Helvetica,sans-serif" fill="#fff">N</text></g></svg></button>
+<button id="compass" hidden aria-label="North up"><svg viewBox="-20 -20 40 40"><g id="needle"><path d="M0-9 4.2 1H-4.2Z" fill="#ff5a5a"/><path d="M0 11 4.2 1H-4.2Z" fill="#cfd8dc"/><text x="0" y="-11" text-anchor="middle" font-size="8.5" font-weight="900" font-family="Arial,Helvetica,sans-serif" fill="#fff">N</text></g></svg></button>
 
 <div id="loc" role="dialog" aria-labelledby="loct" hidden>
   <div class="lc">
-    <h2 id="loct">צריך גישה למיקום</h2>
-    <p id="locmsg">בלי מיקום אי אפשר להציג את המטוס על המפה.</p>
+    <h2 id="loct">Location access needed</h2>
+    <p id="locmsg">Without location the aircraft cannot be shown on the map.</p>
     <ol id="locsteps">
-      <li><b>הגדרות</b> ← <b>פרטיות ואבטחה</b> ← <b>שירותי מיקום</b>: מופעל.</li>
-      <li>באותו מסך ← <b>אתרי Safari</b> (או <b>Chrome</b>) ← <b>בזמן השימוש ביישום</b>, ו<b>מיקום מדויק</b> מופעל.</li>
-      <li>בספארי: כפתור <b>aA</b> או <b>⋯</b> ← <b>הגדרות אתר</b> ← <b>מיקום</b> ← <b>אפשר</b>.</li>
+      <li><b>Settings</b> → <b>Privacy &amp; Security</b> → <b>Location Services</b>: On.</li>
+      <li>Same screen → <b>Safari Websites</b> (or <b>Chrome</b>) → <b>While Using the App</b>, with <b>Precise Location</b> on.</li>
+      <li>In Safari: <b>aA</b> or <b>⋯</b> → <b>Website Settings</b> → <b>Location</b> → <b>Allow</b>.</li>
     </ol>
-    <div class="lb"><button id="locretry" class="pri">נסה שוב</button><button id="locclose">לא עכשיו</button></div>
+    <div class="lb"><button id="locretry" class="pri">Try again</button><button id="locclose">Not now</button></div>
   </div>
 </div>
 <script>/* @preserve
@@ -837,7 +837,7 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 //# sourceMappingURL=leaflet-rotate.js.map
 </script>
 <script>
-const DATA={"zones":[{"id":"601","band":null,"label":[31.340411,34.480422],"poly":[[31.376997,34.470067],[31.355749,34.549463],[31.321657,34.548488],[31.320425,34.525143],[31.312059,34.495228],[31.313714,34.483616],[31.314946,34.47212],[31.317104,34.450049],[31.362153,34.461823]]},{"id":"602","band":null,"label":[31.403606,34.538133],"poly":[[31.45549,34.536897],[31.427291,34.583578],[31.364637,34.572008],[31.38886,34.47523],[31.416891,34.50347],[31.440641,34.518657],[31.447329,34.52692]]},{"id":"603","band":null,"label":[31.465229,34.593891],"poly":[[31.469663,34.54005],[31.479912,34.553519],[31.483802,34.559125],[31.488595,34.565116],[31.494958,34.577714],[31.501996,34.591649],[31.512117,34.621731],[31.447187,34.643066],[31.432164,34.599988]]},{"id":"604","band":null,"label":[31.470083,34.685496],"poly":[[31.51039,34.633525],[31.506192,34.653932],[31.50066,34.674023],[31.498216,34.679364],[31.494353,34.686288],[31.487853,34.700056],[31.48007,34.707129],[31.464646,34.721406],[31.442764,34.730959],[31.413559,34.728688],[31.415231,34.653625],[31.45049,34.65687]]},{"id":"605","band":null,"label":[31.382375,34.667043],"poly":[[31.407019,34.613062],[31.405641,34.723436],[31.343253,34.687751],[31.346581,34.646345],[31.351751,34.640127],[31.360005,34.632371],[31.369264,34.623571],[31.379907,34.618412],[31.390943,34.615804]]},{"id":"606","band":[3000,5000],"label":[31.349771,34.748865],"poly":[[31.415366,34.758467],[31.4157,34.765092],[31.414951,34.7769],[31.396587,34.779468],[31.36731,34.783587],[31.341953,34.778559],[31.286134,34.778483],[31.27584,34.748406],[31.332435,34.715572],[31.345427,34.718557]]},{"id":"607","band":[2000,3700],"label":[31.55878,34.709907],"poly":[[31.605108,34.694961],[31.59305,34.733934],[31.508563,34.760266],[31.483627,34.736934],[31.561975,34.653515],[31.595433,34.659046]]},{"id":"681","band":[3000,6000],"label":[31.467786,34.847401],"poly":[[31.533003,34.792719],[31.533205,34.888684],[31.434039,34.886462],[31.411907,34.840157],[31.433893,34.791939]]}],"points":[{"name":"רוחמה","ll":[31.493393,34.705116]},{"name":"סעד","ll":[31.463908,34.534649]},{"name":"בית קמה","ll":[31.44297,34.766862]},{"name":"בית הגדי","ll":[31.414426,34.606919]},{"name":"שובל","ll":[31.40815,34.746384]},{"name":"מלילות","ll":[31.38942,34.595855]},{"name":"משמר הנגב","ll":[31.368099,34.713008]},{"name":"ברוש","ll":[31.364567,34.618799]},{"name":"אשל הנשיא","ll":[31.331439,34.69966]},{"name":"בטחה","ll":[31.331915,34.63153]},{"name":"רנן","ll":[31.32883,34.597514]},{"name":"תפרח","ll":[31.322878,34.665932]},{"name":"פטיש","ll":[31.321007,34.559314]},{"name":"צומת מעון","ll":[31.311771,34.439119]},{"name":"קו מתח","ll":[31.290168,34.596987]},{"name":"גשר","ll":[31.280313,34.64902]},{"name":"תימן","ll":[31.279409,34.712859]}]};
+const DATA={"zones":[{"id":"601","band":null,"label":[31.340411,34.480422],"poly":[[31.376997,34.470067],[31.355749,34.549463],[31.321657,34.548488],[31.320425,34.525143],[31.312059,34.495228],[31.313714,34.483616],[31.314946,34.47212],[31.317104,34.450049],[31.362153,34.461823]]},{"id":"602","band":null,"label":[31.403606,34.538133],"poly":[[31.45549,34.536897],[31.427291,34.583578],[31.364637,34.572008],[31.38886,34.47523],[31.416891,34.50347],[31.440641,34.518657],[31.447329,34.52692]]},{"id":"603","band":null,"label":[31.465229,34.593891],"poly":[[31.469663,34.54005],[31.479912,34.553519],[31.483802,34.559125],[31.488595,34.565116],[31.494958,34.577714],[31.501996,34.591649],[31.512117,34.621731],[31.447187,34.643066],[31.432164,34.599988]]},{"id":"604","band":null,"label":[31.470083,34.685496],"poly":[[31.51039,34.633525],[31.506192,34.653932],[31.50066,34.674023],[31.498216,34.679364],[31.494353,34.686288],[31.487853,34.700056],[31.48007,34.707129],[31.464646,34.721406],[31.442764,34.730959],[31.413559,34.728688],[31.415231,34.653625],[31.45049,34.65687]]},{"id":"605","band":null,"label":[31.382375,34.667043],"poly":[[31.407019,34.613062],[31.405641,34.723436],[31.343253,34.687751],[31.346581,34.646345],[31.351751,34.640127],[31.360005,34.632371],[31.369264,34.623571],[31.379907,34.618412],[31.390943,34.615804]]},{"id":"606","band":[3000,5000],"label":[31.349771,34.748865],"poly":[[31.415366,34.758467],[31.4157,34.765092],[31.414951,34.7769],[31.396587,34.779468],[31.36731,34.783587],[31.341953,34.778559],[31.286134,34.778483],[31.27584,34.748406],[31.332435,34.715572],[31.345427,34.718557]]},{"id":"607","band":[2000,3700],"label":[31.55878,34.709907],"poly":[[31.605108,34.694961],[31.59305,34.733934],[31.508563,34.760266],[31.483627,34.736934],[31.561975,34.653515],[31.595433,34.659046]]},{"id":"681","band":[3000,6000],"label":[31.467786,34.847401],"poly":[[31.533003,34.792719],[31.533205,34.888684],[31.434039,34.886462],[31.411907,34.840157],[31.433893,34.791939]]}],"points":[{"name":"Ruhama","ll":[31.493393,34.705116]},{"name":"Sa'ad","ll":[31.463908,34.534649]},{"name":"Beit Kama","ll":[31.44297,34.766862]},{"name":"Beit HaGadi","ll":[31.414426,34.606919]},{"name":"Shoval","ll":[31.40815,34.746384]},{"name":"Mlilot","ll":[31.38942,34.595855]},{"name":"Mishmar HaNegev","ll":[31.368099,34.713008]},{"name":"Brosh","ll":[31.364567,34.618799]},{"name":"Eshel HaNasi","ll":[31.331439,34.69966]},{"name":"Bitha","ll":[31.331915,34.63153]},{"name":"Ranen","ll":[31.32883,34.597514]},{"name":"Tifrach","ll":[31.322878,34.665932]},{"name":"Patish","ll":[31.321007,34.559314]},{"name":"Maon Jct","ll":[31.311771,34.439119]},{"name":"Kav Metach","ll":[31.290168,34.596987]},{"name":"Gesher","ll":[31.280313,34.64902]},{"name":"Teyman","ll":[31.279409,34.712859]}]};
 const $=id=>document.getElementById(id);
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
@@ -876,7 +876,7 @@ const base={
   sat:L.tileLayer(TILE_URL.sat,{className:'sat',maxNativeZoom:14,maxZoom:16,crossOrigin:true,attribution:'Esri, Maxar'}),
   topo:L.tileLayer(TILE_URL.topo,{maxNativeZoom:14,maxZoom:16,crossOrigin:true,attribution:'Esri, HERE, OSM'})};
 for(const k in base){ base[k].on('tileerror',e=>{ const b=map.unproject(e.coords.scaleBy(L.point(256,256)).add([128,128]),e.coords.z);
-    if(!L.latLngBounds(BOUNDS).contains(b)) return; if(++tileErrors===6) banner('מפת הרקע לא זמינה – אין קליטה',6000); });
+    if(!L.latLngBounds(BOUNDS).contains(b)) return; if(++tileErrors===6) banner('Base map unavailable – no signal',6000); });
   base[k].on('tileload',()=>{tileErrors=0;}); }
 const Embedded=L.GridLayer.extend({createTile(c){const img=document.createElement('img');img.alt='';
   const d=this.options.data[c.z+'/'+c.x+'/'+c.y]; if(d) img.src=this.options.mime+d; return img;}});
@@ -892,7 +892,7 @@ for(const z of DATA.zones){
 const ptMarkers=DATA.points.map(p=>L.marker(p.ll,{interactive:false,keyboard:false,
   icon:L.divIcon({className:'pt',iconSize:[0,0],html:`<div><i></i><span>${p.name}</span></div>`})}).addTo(vec));
 
-const MODES=['sat','topo','none'], MODE_NAME={sat:'לוויין',topo:'טופו',none:'ללא רקע'};
+const MODES=['sat','topo','none'], MODE_NAME={sat:'Satellite',topo:'Topo',none:'No background'};
 let current='sat', toastT=null;
 function toast(msg,ms){ clearTimeout(toastT); $('toast').textContent=msg; $('toast').hidden=false; toastT=setTimeout(()=>$('toast').hidden=true,ms||1600); }
 function setBase(k){
@@ -936,9 +936,9 @@ let acShown=false, follow=true, last=null, lastFix=0, wasIn=null;
 // Dragging the map stops following (orientation is kept); after 20 s untouched it resumes.
 // Map bearing follows the CSS convention: +B turns the map B degrees clockwise, so track-up uses B = -track.
 let refollowT=null, orient=store.get('orient','north'), trackDeg=null, bearing=0, bearingGoal=0, rafB=null;
-const ORIENT_NAME={north:'צפון למעלה',track:'כיוון טיסה למעלה',manual:'סיבוב ידני'};
+const ORIENT_NAME={north:'North up',track:'Track up',manual:'Manual rotation'};
 function updFollowBtn(){ $('follow').dataset.mode=follow?orient:'free';
-  $('follow').setAttribute('aria-label',follow?ORIENT_NAME[orient]:'מעקב כבוי – הקש למרכוז'); }
+  $('follow').setAttribute('aria-label',follow?ORIENT_NAME[orient]:'Not following – tap to centre'); }
 function norm(a){ return ((a%360)+540)%360-180; }
 function stepBearing(){ const d=norm(bearingGoal-bearing);
   bearing = Math.abs(d)<0.5 ? bearingGoal : bearing+d*0.25; map.setBearing(bearing); drawBearing();
@@ -1017,13 +1017,13 @@ updFollowBtn();
 
 /* ---------- settings sheet ---------- */
 function showTrack(v){ v?trackLine.addTo(map):trackLine.remove(); $('trackbtn').setAttribute('aria-pressed',v); store.set('trackOn',v); }
-$('trackbtn').onclick=()=>{ const v=$('trackbtn').getAttribute('aria-pressed')!=='true'; showTrack(v); toast(v?'נתיב מוצג':'נתיב מוסתר'); };
+$('trackbtn').onclick=()=>{ const v=$('trackbtn').getAttribute('aria-pressed')!=='true'; showTrack(v); toast(v?'Track shown':'Track hidden'); };
 showTrack(store.get('trackOn',true));
 // clearing needs a second tap within 3 s, so a stray touch in flight can't erase the track
 let clearT=null;
 $('clearbtn').onclick=()=>{ const b=$('clearbtn');
-  if(b.classList.contains('arm')){ clearTimeout(clearT); b.classList.remove('arm'); trackLine.setLatLngs([]); toast('הנתיב נוקה'); return; }
-  b.classList.add('arm'); toast('לחץ שוב כדי לנקות את הנתיב',3000); clearT=setTimeout(()=>b.classList.remove('arm'),3000); };
+  if(b.classList.contains('arm')){ clearTimeout(clearT); b.classList.remove('arm'); trackLine.setLatLngs([]); toast('Track cleared'); return; }
+  b.classList.add('arm'); toast('Tap again to clear track',3000); clearT=setTimeout(()=>b.classList.remove('arm'),3000); };
 
 
 /* ---------- offline download of base maps (cached by the service worker) ---------- */
@@ -1050,14 +1050,14 @@ async function download(force){
   if(!(await swReady())) return;
   dlBusy=true;
   const list=tileList(); let done=0, fail=0, i=0;
-  const prog=()=>{ const pc=Math.round(100*done/list.length); $('dlchip').textContent=`מוריד מפה ${pc}%`; $('dlchip').hidden=false; };
+  const prog=()=>{ const pc=Math.round(100*done/list.length); $('dlchip').textContent=`Downloading map ${pc}%`; $('dlchip').hidden=false; };
   const worker=async()=>{ while(i<list.length){ const u=list[i++];
       try{ const r=await fetch(u,{mode:'cors'}); if(!r.ok) fail++; }catch(e){ fail++; } done++; if(done%10===0) prog(); } };
   prog(); await Promise.all(Array.from({length:6},worker));
   dlBusy=false; $('dlchip').hidden=true;
   if(fail>list.length*0.02) return;   // resumes automatically next time there is signal
   store.set('dl',{v:2,t:Date.now(),n:list.length-fail});
-  $('dlchip').textContent='✓ המפה מוכנה לשימוש בלי קליטה'; $('dlchip').hidden=false; setTimeout(()=>$('dlchip').hidden=true,4000);
+  $('dlchip').textContent='✓ Map ready for offline use'; $('dlchip').hidden=false; setTimeout(()=>$('dlchip').hidden=true,4000);
 }
 window.addEventListener('online',()=>download(false));
 
@@ -1066,7 +1066,7 @@ let zoneNow=null;
 function situ(ll){
   const z=DATA.zones.find(z=>inPoly(ll,z.poly))||null;
   if(z===zoneNow) return; zoneNow=z; hl.clearLayers();
-  $('zone').hidden=!z; if(z) $('zone').innerHTML='<i></i><small>אזור</small>'+z.id;
+  $('zone').hidden=!z; if(z) $('zone').innerHTML='<i></i><small>ZONE</small>'+z.id;
   if(z) L.polygon(z.poly,{stroke:false,fillColor:'#1747e6',fillOpacity:.16,interactive:false}).addTo(hl);
 }
 
@@ -1084,26 +1084,26 @@ function onFix(lat,lon,accM,spd,hdg){
   if(follow){ map.panTo(ll,{animate:true,duration:0.5}); if(orient==='track') aimBearing(); }
   situ(ll);
   const inMap = lat>BOUNDS[0][0]&&lat<BOUNDS[1][0]&&lon>BOUNDS[0][1]&&lon<BOUNDS[1][1];
-  if(!inMap && wasIn!==false) banner('מחוץ לאזור האימונים – כאן המפה נטענת רק כשיש קליטה',7000);
-  if(inMap && ['אין עדכון GPS','ממתין ל-GPS…'].includes($('banner').textContent)) banner(null);
+  if(!inMap && wasIn!==false) banner('Outside training area – map here needs signal',7000);
+  if(inMap && ['No GPS update','Waiting for GPS…'].includes($('banner').textContent)) banner(null);
   wasIn=inMap;
   last={ll,t:now,hdg}; lastFix=now;
 }
-setInterval(()=>{ if(lastFix && Date.now()-lastFix>10000 ){ banner('אין עדכון GPS'); } },2000);
+setInterval(()=>{ if(lastFix && Date.now()-lastFix>10000 ){ banner('No GPS update'); } },2000);
 
 // Location. iPhone refuses silently when Location Services or the site permission is off,
 // so a refusal opens a card with the exact steps and a retry that runs from a tap.
 let watchId=null, coarseWarned=false;
 function locCard(show,msg){ $('loc').hidden=!show; if(msg) $('locmsg').textContent=msg; }
 function startGPS(){
-  if(!('geolocation' in navigator)){ locCard(true,'הדפדפן הזה לא תומך במיקום. פתח את הכתובת בספארי.'); return; }
+  if(!('geolocation' in navigator)){ locCard(true,'This browser does not support location. Open the address in Safari.'); return; }
   if(watchId!=null) navigator.geolocation.clearWatch(watchId);
   watchId=navigator.geolocation.watchPosition(
     pos=>{ const c=pos.coords; locCard(false);
-      if(c.accuracy>500 && !coarseWarned){ coarseWarned=true; banner('המיקום לא מדויק – הפעל "מיקום מדויק" בהגדרות',8000); }
+      if(c.accuracy>500 && !coarseWarned){ coarseWarned=true; banner('Location is approximate – turn on Precise Location',8000); }
       onFix(c.latitude,c.longitude,c.accuracy,c.speed,c.heading); },
-    err=>{ if(err.code===1){ banner(null); locCard(true,'הטלפון חסם את הגישה למיקום. כדי לאפשר:'); }
-           else banner('ממתין ל-GPS…'); },
+    err=>{ if(err.code===1){ banner(null); locCard(true,'The phone is blocking location access. To allow it:'); }
+           else banner('Waiting for GPS…'); },
     {enableHighAccuracy:true,maximumAge:0,timeout:20000});
 }
 $('locretry').onclick=()=>{ locCard(false); startGPS(); };
