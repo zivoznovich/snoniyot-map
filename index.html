@@ -713,6 +713,15 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
 /* bottom sheet */
 #scrim{position:fixed;inset:0;z-index:1001;background:rgba(0,0,0,.35)}
+#loc{position:fixed;inset:0;z-index:1500;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
+#loc .lc{width:100%;max-width:520px;background:var(--panel);border-top:1px solid var(--line);border-radius:18px 18px 0 0;
+  padding:20px max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 18px) max(20px,env(safe-area-inset-left,0px))}
+#loc h2{margin:0 0 6px;font:700 20px var(--sans)}
+#loc p{margin:0 0 12px;color:var(--dim);font:15px/1.5 var(--sans)}
+#loc ol{margin:0 0 16px;padding-inline-start:20px;display:flex;flex-direction:column;gap:8px;font:15px/1.5 var(--sans)}
+#loc .lb{display:flex;gap:10px}
+#loc .lb button{flex:1;height:50px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:600 16px var(--sans)}
+#loc .lb button.pri{background:var(--accent);border-color:var(--accent);color:#fff}
 #menu{position:fixed;z-index:1002;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--line);border-radius:18px 18px 0 0;
   padding:8px max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 14px) max(16px,env(safe-area-inset-left,0px));
   display:flex;flex-direction:column;max-width:520px;margin:0 auto;max-height:82vh;overflow-y:auto}
@@ -780,6 +789,18 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
   <button id="follow" hidden aria-label="מרכז על המטוס"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button>
 </div>
 
+<div id="loc" role="dialog" aria-labelledby="loct" hidden>
+  <div class="lc">
+    <h2 id="loct">צריך גישה למיקום</h2>
+    <p id="locmsg">בלי מיקום אי אפשר להציג את המטוס על המפה.</p>
+    <ol id="locsteps">
+      <li><b>הגדרות</b> ← <b>פרטיות ואבטחה</b> ← <b>שירותי מיקום</b>: מופעל.</li>
+      <li>באותו מסך ← <b>אתרי Safari</b> (או <b>Chrome</b>) ← <b>בזמן השימוש ביישום</b>, ו<b>מיקום מדויק</b> מופעל.</li>
+      <li>בספארי: כפתור <b>aA</b> או <b>⋯</b> ← <b>הגדרות אתר</b> ← <b>מיקום</b> ← <b>אפשר</b>.</li>
+    </ol>
+    <div class="lb"><button id="locretry" class="pri">נסה שוב</button><button id="locclose">לא עכשיו</button></div>
+  </div>
+</div>
 <div id="scrim" hidden></div>
 <div id="menu" hidden>
   <div class="grab"></div>
@@ -977,13 +998,23 @@ function onFix(lat,lon,accM,spd,hdg){
 }
 setInterval(()=>{ if(lastFix && Date.now()-lastFix>10000 ){ banner('אין עדכון GPS'); } },2000);
 
+// Location. iPhone refuses silently when Location Services or the site permission is off,
+// so a refusal opens a card with the exact steps and a retry that runs from a tap.
+let watchId=null, coarseWarned=false;
+function locCard(show,msg){ $('loc').hidden=!show; if(msg) $('locmsg').textContent=msg; }
 function startGPS(){
-  if(!('geolocation' in navigator)){ banner('הדפדפן לא תומך במיקום'); return; }
-  navigator.geolocation.watchPosition(
-    pos=>{ const c=pos.coords; onFix(c.latitude,c.longitude,c.accuracy,c.speed,c.heading); },
-    err=>{ banner(err.code===1?'אין הרשאת מיקום – אפשר אותה בהגדרות הדפדפן':'ממתין ל-GPS…'); },
+  if(!('geolocation' in navigator)){ locCard(true,'הדפדפן הזה לא תומך במיקום. פתח את הכתובת בספארי.'); return; }
+  if(watchId!=null) navigator.geolocation.clearWatch(watchId);
+  watchId=navigator.geolocation.watchPosition(
+    pos=>{ const c=pos.coords; locCard(false);
+      if(c.accuracy>500 && !coarseWarned){ coarseWarned=true; banner('המיקום לא מדויק – הפעל "מיקום מדויק" בהגדרות',8000); }
+      onFix(c.latitude,c.longitude,c.accuracy,c.speed,c.heading); },
+    err=>{ if(err.code===1){ banner(null); locCard(true,'הטלפון חסם את הגישה למיקום. כדי לאפשר:'); }
+           else banner('ממתין ל-GPS…'); },
     {enableHighAccuracy:true,maximumAge:0,timeout:20000});
 }
+$('locretry').onclick=()=>{ locCard(false); startGPS(); };
+$('locclose').onclick=()=>locCard(false);
 
 /* ---------- keep screen awake ---------- */
 async function wake(){ try{ if('wakeLock' in navigator) await navigator.wakeLock.request('screen'); }catch(e){} }
