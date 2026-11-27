@@ -1,6 +1,6 @@
 // App shell: versioned cache. Map tiles: long-lived cache, cache-first, so they work without signal.
-const APP='mm-app-v20', TILES='mm-tiles-v1';
-self.addEventListener('install',e=>{e.waitUntil(caches.open(APP).then(c=>c.addAll(['./','index.html','manifest.webmanifest','icon.png'])));self.skipWaiting();});
+const APP='mm-app-v22', TILES='mm-tiles-v1';
+self.addEventListener('install',e=>{e.waitUntil(caches.open(APP).then(c=>c.addAll(['./','index.html','manifest.webmanifest','icon.png','manual.html','manual/main.jpg','manual/track.jpg','manual/free.jpg','manual/clear.jpg','manual/wide.jpg','manual/loc.jpg'])));self.skipWaiting();});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(n=>n!==APP&&n!==TILES).map(n=>caches.delete(n)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{
   const u=new URL(e.request.url);

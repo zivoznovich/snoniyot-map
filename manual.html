@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Snoniyot Moving Map – User Manual</title>
+<style>
+/* Operating-manual layout: single reading column, numbered sections, tables for reference data. */
+:root{
+  --bg:#f6f7f8; --paper:#ffffff; --ink:#12191d; --dim:#5a6870; --line:#dde3e6; --accent:#d81b6a; --zone:#1747e6; --warn:#b26a00; --note:#eef3ff;
+  --sans:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1013; --paper:#12191d; --ink:#e9eef0; --dim:#94a5ad; --line:#26333a; --accent:#ff4d94; --zone:#6e95ff; --warn:#ffb020; --note:#17223a; color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:760px;margin:0 auto;background:var(--paper);padding:calc(env(safe-area-inset-top,0px) + 20px) max(20px,env(safe-area-inset-right,0px)) 48px max(20px,env(safe-area-inset-left,0px))}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;font:600 14px var(--sans)}
+.top a{color:var(--accent);text-decoration:none}
+.top span{color:var(--dim)}
+header{border-bottom:2px solid var(--ink);padding:28px 0 18px;margin-bottom:8px}
+header .k{font:700 12px var(--mono);letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+h1{font-size:32px;line-height:1.15;margin:6px 0 8px;text-wrap:balance}
+header p{margin:0;color:var(--dim)}
+nav{border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:22px 0}
+nav b{font:700 12px var(--mono);letter-spacing:.12em;color:var(--dim)}
+nav ol{margin:8px 0 0;padding-left:22px;columns:2;column-gap:28px;font-size:15px}
+nav a{color:var(--ink)}
+@media (max-width:560px){nav ol{columns:1}}
+h2{font-size:22px;margin:40px 0 10px;padding-top:12px;border-top:1px solid var(--line);scroll-margin-top:16px}
+h2 .n{font:700 14px var(--mono);color:var(--accent);margin-right:10px}
+h3{font-size:17px;margin:24px 0 6px}
+p,li{max-width:68ch}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+.tbl{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font:700 12px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);border-bottom:2px solid var(--line)}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:14px}
+td.he{direction:rtl;text-align:right;font-weight:700;white-space:nowrap}
+code,kbd{font:600 14px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.note,.warn{border-left:4px solid var(--zone);background:var(--note);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.warn{border-left-color:var(--warn)}
+.note b,.warn b{display:block;font:700 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.warn b{color:var(--warn)} .note b{color:var(--zone)}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:16px 0}
+figure{margin:0}
+figure img{width:100%;max-width:100%;border-radius:14px;border:1px solid var(--line);display:block}
+figcaption{font-size:13px;color:var(--dim);margin-top:6px;line-height:1.4}
+.hero{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:24px;align-items:start;margin:16px 0}
+@media (max-width:600px){.hero{grid-template-columns:1fr}.hero figure{max-width:280px}}
+.callouts{margin:0;padding-left:0;list-style:none;counter-reset:c}
+.callouts li{counter-increment:c;position:relative;padding-left:34px;margin:8px 0}
+.callouts li::before{content:counter(c);position:absolute;left:0;top:1px;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--paper);
+  font:700 13px/24px var(--sans);text-align:center}
+.ic{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:#172229;color:#eef4f5;vertical-align:middle}
+.ic.pink{background:#ff3b8b;color:#fff}
+.ic svg{width:18px;height:18px}
+.check li{list-style:none;position:relative;padding-left:28px}
+.check{padding-left:0}
+.check li::before{content:"";position:absolute;left:2px;top:5px;width:14px;height:14px;border:2px solid var(--ink);border-radius:3px}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--dim)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media print{body{background:#fff}.wrap{max-width:none;padding:0}.top{display:none}h2{break-after:avoid}figure,table{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="./">← Back to map</a><span>Version 2026-11-27</span></div>
+
+<header>
+  <div class="k">User manual</div>
+  <h1>Snoniyot Moving Map</h1>
+  <p>A phone moving map for the Snoniyot training areas: zones, reporting points, your aircraft position and flight track. Works without mobile signal once the map has been downloaded.</p>
+</header>
+
+<div class="warn"><b>Orientation aid only</b>This app is not certified navigation equipment and does not replace the aircraft instruments, the approved charts or ATC instructions. Zone boundaries come from a September 2010 map and may have changed. Check current publications before flying.</div>
+
+<nav aria-label="Contents"><b>CONTENTS</b>
+<ol>
+  <li><a href="#setup">First-time setup</a></li>
+  <li><a href="#screen">The screen</a></li>
+  <li><a href="#follow">Following and orientation</a></li>
+  <li><a href="#gestures">Touch gestures</a></li>
+  <li><a href="#modes">Map modes</a></li>
+  <li><a href="#track">Flight track</a></li>
+  <li><a href="#data">Zones and reporting points</a></li>
+  <li><a href="#offline">Using it without signal</a></li>
+  <li><a href="#messages">Messages</a></li>
+  <li><a href="#checklist">Pre-flight checklist</a></li>
+  <li><a href="#trouble">Troubleshooting</a></li>
+  <li><a href="#accuracy">Accuracy and data</a></li>
+  <li><a href="#privacy">Privacy and updates</a></li>
+</ol></nav>
+
+<h2 id="setup"><span class="n">01</span>First-time setup</h2>
+<p>Do this once, on the ground, with mobile signal or Wi-Fi.</p>
+<ol>
+  <li>Open <code>zivoznovich.github.io/snoniyot-map</code> in <b>Safari</b> (iPhone) or <b>Chrome</b> (Android).</li>
+  <li>When the phone asks for your location, choose <b>Allow</b>. If you choose <b>Allow While Using App</b>, also keep <b>Precise Location</b> on.</li>
+  <li>Add the app to the home screen. On iPhone, tap <b>Share</b> → <b>Add to Home Screen</b>. On Android, tap <b>⋮</b> → <b>Add to Home screen</b> (or <b>Install app</b>).</li>
+  <li>From now on, <b>open the app from the home-screen icon</b>. On iPhone the icon keeps its own storage, separate from Safari.</li>
+  <li>Leave the app open for about a minute. A small note at the bottom left shows <i>Downloading map NN%</i> and then <i>✓ Map ready for offline use</i>.</li>
+  <li>Test it: switch on airplane mode, close the app completely and open it again. The map, zones and points must appear.</li>
+</ol>
+
+<h3>If location is blocked</h3>
+<p>If the phone refuses location, a card with the steps below opens at the bottom of the screen. Follow them and tap <b>Try again</b>.</p>
+<div class="hero">
+  <figure><img src="manual/loc.jpg" alt="Location access card with three setup steps and Try again button" loading="lazy"><figcaption>The location help card.</figcaption></figure>
+  <div>
+    <ol>
+      <li><b>Settings</b> → <b>Privacy &amp; Security</b> → <b>Location Services</b>: On.</li>
+      <li>Same screen → <b>Safari Websites</b> (or <b>Chrome</b>) → <b>While Using the App</b>, with <b>Precise Location</b> on.</li>
+      <li>In Safari: <b>aA</b> or <b>⋯</b> → <b>Website Settings</b> → <b>Location</b> → <b>Allow</b>.</li>
+    </ol>
+    <p>If <b>Precise Location</b> is off, the phone reports a position that can be kilometres out. The app then shows <i>Location is approximate – turn on Precise Location</i>.</p>
+  </div>
+</div>
+
+<h2 id="screen"><span class="n">02</span>The screen</h2>
+<p>The map fills the whole screen. Everything else is a small overlay that you can reach with your thumb.</p>
+<div class="hero">
+  <figure><img src="manual/main.jpg" alt="Main screen showing zone badge, help button, aircraft, track and control buttons" loading="lazy"><figcaption>Main screen, north up, “No background” mode.</figcaption></figure>
+  <ol class="callouts">
+    <li><b>Zone badge</b> (top centre). Shows <i>ZONE</i> and the number of the zone you are in. It is hidden when you are outside all zones. The zone you are in is also shaded a little darker on the map.</li>
+    <li><b>Compass</b> (top left). Appears only when the map is rotated. The red needle points to true north. Tap it to return to north up.</li>
+    <li><b>Help</b> <span class="ic" style="border-radius:50%">?</span> (top right). Opens this manual.</li>
+    <li><b>Aircraft</b>. A Snonit (Grob G 120A) silhouette, drawn exactly on your GPS position and pointing along your track over the ground. The pale circle around it shows GPS accuracy.</li>
+    <li><b>Flight track</b>. A pink line showing where you have flown.</li>
+    <li><b>Buttons</b> (bottom right), from top to bottom: map mode, show or hide track, clear track, location. See the next sections.</li>
+    <li><b>Scale bar</b> (bottom left), in nautical miles.</li>
+  </ol>
+</div>
+
+<h3>Buttons at a glance</h3>
+<div class="tbl"><table>
+<thead><tr><th>Button</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/></svg></span> Map mode</td><td>Each tap switches Satellite → Topo → No background. The new mode's name appears briefly. The app remembers your choice.</td></tr>
+<tr><td><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 18H14a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h5.8"/></svg></span> Track</td><td>Shows or hides the flight track. When hidden, the icon is dimmed and crossed out. The track keeps recording while hidden.</td></tr>
+<tr><td><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l.9 12.5h9.2L17.5 7"/></svg></span> Clear</td><td>Erases the track. Needs two taps: the first turns the button red, the second (within 3 seconds) clears.</td></tr>
+<tr><td><span class="ic pink"><svg viewBox="0 0 24 24"><path d="M12 2.8 19.2 20 12 16.2 4.8 20z" fill="currentColor"/></svg></span> Location</td><td>Centres the map on the aircraft and switches between North up and Track up. See section 3.</td></tr>
+</tbody></table></div>
+
+<h2 id="follow"><span class="n">03</span>Following and orientation</h2>
+<p>The location button works the same way as in common flight apps. Its icon shows the current state.</p>
+<div class="tbl"><table>
+<thead><tr><th>State</th><th>Button</th><th>Map behaviour</th><th>Tap the button to…</th></tr></thead>
+<tbody>
+<tr><td><b>North up</b></td><td>Pink, arrow with “N”</td><td>Aircraft centred, north at the top, aircraft symbol turns with your track.</td><td>Switch to Track up</td></tr>
+<tr><td><b>Track up</b></td><td>Pink, navigation arrow</td><td>Aircraft centred and always pointing up; the map turns around it. The compass appears.</td><td>Switch to North up</td></tr>
+<tr><td><b>Not following</b></td><td>Grey, crosshair</td><td>The map stays where you left it.</td><td>Centre on the aircraft again, in the last orientation used</td></tr>
+</tbody></table></div>
+<div class="shots">
+  <figure><img src="manual/track.jpg" alt="Track-up mode with compass visible" loading="lazy"><figcaption>Track up: the aircraft points up and the compass shows north.</figcaption></figure>
+  <figure><img src="manual/free.jpg" alt="Map moved by hand, crosshair button visible" loading="lazy"><figcaption>After a one-finger pan: following stops and the button turns grey.</figcaption></figure>
+</div>
+<ul>
+  <li><b>Moving the map with one finger</b> stops following. If you don't touch the map for <b>20 seconds</b>, it returns to the aircraft by itself.</li>
+  <li><b>Pinching and rotating</b> do not stop following. The aircraft stays in the centre while you zoom or turn the map.</li>
+  <li><b>Rotating by hand</b> (two-finger twist) leaves Track up and keeps the map at the angle you chose. Tap the compass or the location button to go back to North up.</li>
+  <li><b>Track</b> means your direction over the ground from GPS, not your magnetic heading. It includes wind drift. Below about 5 kt (taxiing or parked), the map doesn't rotate, so GPS noise can't spin it.</li>
+</ul>
+
+<h2 id="gestures"><span class="n">04</span>Touch gestures</h2>
+<div class="tbl"><table>
+<thead><tr><th>Gesture</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td>One-finger drag</td><td>Move the map (stops following)</td></tr>
+<tr><td>Pinch</td><td>Zoom in and out</td></tr>
+<tr><td>Two-finger twist</td><td>Rotate the map</td></tr>
+<tr><td>Double tap</td><td>Zoom in one step</td></tr>
+<tr><td>Two-finger tap</td><td>Zoom out one step</td></tr>
+<tr><td>Double tap, then drag up or down</td><td>One-handed zoom: drag down to zoom in, up to zoom out</td></tr>
+</tbody></table></div>
+<h3>What changes with zoom</h3>
+<p>Labels shrink as you zoom out so the map doesn't clutter. Zoomed far out, the point names disappear and only triangles and zone numbers remain. Zoomed out over the whole country, only the zone outlines and numbers remain. The aircraft always keeps the same size.</p>
+<figure style="max-width:260px;margin:12px 0"><img src="manual/wide.jpg" alt="Zoomed-out view with zone numbers and small triangles" loading="lazy"><figcaption>Zoomed out: zone numbers and small triangles only.</figcaption></figure>
+
+<h2 id="modes"><span class="n">05</span>Map modes</h2>
+<div class="tbl"><table>
+<thead><tr><th>Mode</th><th>Background</th><th>Best for</th></tr></thead>
+<tbody>
+<tr><td><b>Satellite</b></td><td>Esri World Imagery, slightly dimmed so the zones stand out.</td><td>Recognising fields, villages and roads below you.</td></tr>
+<tr><td><b>Topo</b></td><td>Esri World Topographic map.</td><td>Roads, place names and terrain.</td></tr>
+<tr><td><b>No background</b></td><td>Black. Zones and reporting points only.</td><td>The clearest picture, the least glare, and the lowest battery use. Works with no download at all.</td></tr>
+</tbody></table></div>
+
+<h2 id="track"><span class="n">06</span>Flight track</h2>
+<ul>
+  <li>The track starts recording when the app gets its first GPS position. A new point is added every 15 m of movement.</li>
+  <li>The track is kept only while the app is open. Closing the app, or the phone stopping it in the background, starts a new track.</li>
+  <li>Hiding the track does not stop the recording. Show it again and the whole flight is there.</li>
+  <li>Clearing needs two taps within 3 seconds, so a stray touch in flight can't erase it.</li>
+</ul>
+<figure style="max-width:260px;margin:12px 0"><img src="manual/clear.jpg" alt="Clear button turned red with the message Tap again to clear track" loading="lazy"><figcaption>First tap on Clear: the button turns red and asks for a second tap.</figcaption></figure>
+
+<h2 id="data"><span class="n">07</span>Zones and reporting points</h2>
+<h3>Zones</h3>
+<p>Eight training zones are drawn as blue outlines with their number: <b>601, 602, 603, 604, 605, 606, 607</b> and <b>681</b>. Altitude limits are intentionally not shown. Use the approved charts for them.</p>
+<h3>Reporting points</h3>
+<p>Each reporting point is a black triangle (white in No background mode), with the centre of the triangle on the point. The name is shown in Hebrew. Coordinates are WGS84, the same datum as GPS.</p>
+<div class="tbl"><table>
+<thead><tr><th style="text-align:right">Name</th><th>Latitude</th><th>Longitude</th><th>Decimal</th></tr></thead>
+<tbody><tr><td class=he>רוחמה</td><td class=num>N31°29.604′</td><td class=num>E34°42.307′</td><td class=num>31.49339, 34.70512</td></tr><tr><td class=he>סעד</td><td class=num>N31°27.834′</td><td class=num>E34°32.079′</td><td class=num>31.46391, 34.53465</td></tr><tr><td class=he>בית קמה</td><td class=num>N31°26.578′</td><td class=num>E34°46.012′</td><td class=num>31.44297, 34.76686</td></tr><tr><td class=he>בית הגדי</td><td class=num>N31°24.866′</td><td class=num>E34°36.415′</td><td class=num>31.41443, 34.60692</td></tr><tr><td class=he>שובל</td><td class=num>N31°24.489′</td><td class=num>E34°44.783′</td><td class=num>31.40815, 34.74638</td></tr><tr><td class=he>מלילות</td><td class=num>N31°23.365′</td><td class=num>E34°35.751′</td><td class=num>31.38942, 34.59586</td></tr><tr><td class=he>משמר הנגב</td><td class=num>N31°22.086′</td><td class=num>E34°42.780′</td><td class=num>31.36810, 34.71301</td></tr><tr><td class=he>ברוש</td><td class=num>N31°21.874′</td><td class=num>E34°37.128′</td><td class=num>31.36457, 34.61880</td></tr><tr><td class=he>בטחה</td><td class=num>N31°19.915′</td><td class=num>E34°37.892′</td><td class=num>31.33191, 34.63153</td></tr><tr><td class=he>אשל הנשיא</td><td class=num>N31°19.886′</td><td class=num>E34°41.980′</td><td class=num>31.33144, 34.69966</td></tr><tr><td class=he>רנן</td><td class=num>N31°19.730′</td><td class=num>E34°35.851′</td><td class=num>31.32883, 34.59751</td></tr><tr><td class=he>תפרח</td><td class=num>N31°19.373′</td><td class=num>E34°39.956′</td><td class=num>31.32288, 34.66593</td></tr><tr><td class=he>פטיש</td><td class=num>N31°19.260′</td><td class=num>E34°33.559′</td><td class=num>31.32101, 34.55931</td></tr><tr><td class=he>צומת מעון</td><td class=num>N31°18.706′</td><td class=num>E34°26.347′</td><td class=num>31.31177, 34.43912</td></tr><tr><td class=he>קו מתח</td><td class=num>N31°17.410′</td><td class=num>E34°35.819′</td><td class=num>31.29017, 34.59699</td></tr><tr><td class=he>גשר</td><td class=num>N31°16.819′</td><td class=num>E34°38.941′</td><td class=num>31.28031, 34.64902</td></tr><tr><td class=he>תימן</td><td class=num>N31°16.765′</td><td class=num>E34°42.772′</td><td class=num>31.27941, 34.71286</td></tr></tbody></table></div>
+<p style="font-size:14px;color:var(--dim)">The coordinates were measured from the triangles on the 1:100,000 map. On that map each triangle covers about 700 m on the ground, so a point is accurate to its printed position, not to a surveyed fix.</p>
+
+<h2 id="offline"><span class="n">08</span>Using it without signal</h2>
+<p>Mobile signal at altitude comes and goes. The app is built to work without it.</p>
+<ul>
+  <li><b>The app itself</b> (zones, points, buttons, this manual) is saved on the phone the first time you open it.</li>
+  <li><b>Satellite and Topo backgrounds</b> for the training area download automatically in the background whenever there is signal. This takes about 2,300 small images, from country-wide zoom down to roughly 1:50,000 detail. When it finishes, a note says <i>✓ Map ready for offline use</i>. An interrupted download resumes by itself next time, and the map refreshes every 60 days.</li>
+  <li><b>Zoomed in further</b> than the downloaded detail, the background is enlarged and looks slightly soft. It never turns blank.</li>
+  <li><b>Outside the training area</b>, the background loads only with signal. Zones, points and your position always show.</li>
+  <li><b>GPS does not need signal.</b> The phone's GPS works in airplane mode on most phones.</li>
+</ul>
+<div class="note"><b>iPhone</b>Safari and the home-screen app keep separate storage. Download the map from the home-screen app, the one you will fly with.</div>
+
+<h2 id="messages"><span class="n">09</span>Messages</h2>
+<div class="tbl"><table>
+<thead><tr><th>Message</th><th>Meaning</th><th>What to do</th></tr></thead>
+<tbody>
+<tr><td><i>Waiting for GPS…</i></td><td>No position yet.</td><td>Wait. Near a window is best. A cold start can take up to a minute.</td></tr>
+<tr><td><i>No GPS update</i></td><td>No new position for more than 10 seconds. The aircraft is frozen at its last position.</td><td>Move the phone closer to the canopy. Check that location is still allowed.</td></tr>
+<tr><td><i>Location is approximate – turn on Precise Location</i></td><td>The phone gives a coarse position (worse than 500 m).</td><td>Turn on Precise Location (section 1).</td></tr>
+<tr><td><i>Location access needed</i> card</td><td>The phone blocked location.</td><td>Follow the three steps, then tap <b>Try again</b>.</td></tr>
+<tr><td><i>Outside training area – map here needs signal</i></td><td>You are outside the downloaded area.</td><td>Nothing to do. The background loads when there is signal.</td></tr>
+<tr><td><i>Base map unavailable – no signal</i></td><td>Background images inside the training area could not load.</td><td>The download hasn't finished. Switch to <b>No background</b>, and let the download complete on the ground.</td></tr>
+<tr><td><i>Downloading map NN%</i></td><td>Offline download in progress.</td><td>Keep the app open until it finishes.</td></tr>
+</tbody></table></div>
+
+<h2 id="checklist"><span class="n">10</span>Pre-flight checklist</h2>
+<ul class="check">
+  <li>Open the app from the home-screen icon.</li>
+  <li><i>✓ Map ready for offline use</i> has appeared at least once on this phone (not needed in No background mode).</li>
+  <li>The aircraft appears at your real position on the ramp, and the accuracy circle is small.</li>
+  <li>Choose the map mode and the orientation (North up or Track up).</li>
+  <li>Clear the track from the previous flight if you want a clean one.</li>
+  <li>Battery charged, or a cable connected. GPS with the screen on uses noticeable battery.</li>
+  <li>Disable auto-lock, or check that the screen stays on with the app open.</li>
+  <li>Mount the phone securely, near the canopy, where it doesn't obstruct any instrument.</li>
+</ul>
+
+<h2 id="trouble"><span class="n">11</span>Troubleshooting</h2>
+<h3>The aircraft does not appear</h3>
+<p>Location is off or not allowed. Follow section 1. On iPhone, check both <b>Location Services</b> and the setting for Safari.</p>
+<h3>The aircraft jumps or is in the wrong place</h3>
+<p>The GPS has a weak fix. Look at the accuracy circle: if it is large, give the phone a clear view of the sky. Check that <b>Precise Location</b> is on.</p>
+<h3>The map turns white or grey when zooming</h3>
+<p>The background for that area or zoom has not been downloaded and there is no signal. Use <b>No background</b>, or let the download finish on the ground.</p>
+<h3>The screen turns off</h3>
+<p>The app asks the phone to keep the screen on, but some phones and battery-saving modes refuse. Set auto-lock to Never for the flight, and turn off Low Power Mode.</p>
+<h3>The app stopped updating in the background</h3>
+<p>Phones pause web apps that are not on screen. Keep the app in front for the whole flight.</p>
+<h3>I don't see the latest version</h3>
+<p>Close the app completely and open it again while you have signal. If needed, do it twice: the first time downloads the new version, the second time shows it.</p>
+<h3>The map is rotated and I want north up</h3>
+<p>Tap the compass at the top left, or tap the location button until it shows the “N” arrow.</p>
+
+<h2 id="accuracy"><span class="n">12</span>Accuracy and data</h2>
+<ul>
+  <li><b>Source:</b> Snoniyot training areas map, 1:100,000, September 2010.</li>
+  <li><b>Georeferencing:</b> the scan was fitted to the 1 km UTM grid printed on the map (zone 36N, ED50 datum, about 2,200 grid intersections), corrected for scan distortion square by square, and converted to WGS84. The printed latitude and longitude lines were used as an independent check.</li>
+  <li><b>Zone boundaries:</b> each edge was fitted to the centre of the printed blue line. Curved boundaries are followed with short segments.</li>
+  <li><b>Expected accuracy:</b> about 10–50 m on the ground, limited by the scan and the original map. Before your first flight, check on the ground that the aircraft sits in the right place.</li>
+  <li><b>GPS:</b> phone GPS is typically 5–15 m outdoors. Inside a cockpit it can be worse.</li>
+  <li><b>Backgrounds:</b> Satellite and Topo are Esri map services. Their own positional accuracy varies and is independent of the zones.</li>
+</ul>
+
+<h2 id="privacy"><span class="n">13</span>Privacy and updates</h2>
+<ul>
+  <li>Your position never leaves the phone. The app has no server, no account and no tracking.</li>
+  <li>Background images are requested from Esri by map tile. Like any online map, the requests show which area is being viewed, but they don't include your position.</li>
+  <li>Settings (map mode, orientation, track visibility) are saved only on the phone.</li>
+  <li>Updates are published to the same address and load automatically the next time the app opens with signal.</li>
+</ul>
+
+<footer>
+  Snoniyot Moving Map · Version 2026-11-27 · Map engine: MapLibre GL JS · Backgrounds: Esri, Maxar, HERE, OpenStreetMap contributors.<br>
+  Orientation aid only. Not for primary navigation.
+</footer>
+</div>
+</body>
+</html>
