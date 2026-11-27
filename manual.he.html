@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>מפה נעה – סנוניות · מדריך למשתמש</title>
+<style>
+/* Operating-manual layout: single reading column, numbered sections, tables for reference data. */
+:root{
+  --bg:#f6f7f8; --paper:#ffffff; --ink:#12191d; --dim:#5a6870; --line:#dde3e6; --accent:#d81b6a; --zone:#1747e6; --warn:#b26a00; --note:#eef3ff;
+  --sans:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1013; --paper:#12191d; --ink:#e9eef0; --dim:#94a5ad; --line:#26333a; --accent:#ff4d94; --zone:#6e95ff; --warn:#ffb020; --note:#17223a; color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
+.wrap{max-width:760px;margin:0 auto;background:var(--paper);padding:calc(env(safe-area-inset-top,0px) + 20px) max(20px,env(safe-area-inset-right,0px)) 48px max(20px,env(safe-area-inset-left,0px))}
+/* sticky bar: back to the map and chapter jump from anywhere */
+.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;margin:calc(-1 * (env(safe-area-inset-top,0px) + 20px)) -20px 0;
+  padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.bar a,.bar select{height:40px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 15px var(--sans)}
+.bar .mapbtn{display:inline-flex;align-items:center;padding:0 14px;text-decoration:none;background:var(--accent);border-color:var(--accent);color:#fff;flex:none}
+.bar .sel{flex:1;min-width:0}
+.bar select{width:100%;padding:0 10px}
+.bar .up{display:inline-grid;place-items:center;width:40px;text-decoration:none;flex:none}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.back{display:inline-block;margin-top:14px;font:600 13px var(--sans);color:var(--dim);text-decoration:none}
+header{border-bottom:2px solid var(--ink);padding:28px 0 18px;margin-bottom:8px}
+header .k{font:700 12px var(--mono);letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+h1{font-size:32px;line-height:1.15;margin:6px 0 8px;text-wrap:balance}
+header p{margin:0;color:var(--dim)}
+nav{border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:22px 0}
+nav b{font:700 12px var(--mono);letter-spacing:.12em;color:var(--dim)}
+nav ol{margin:8px 0 0;padding-left:22px;columns:2;column-gap:28px;font-size:15px}
+nav a{color:var(--ink)}
+@media (max-width:560px){nav ol{columns:1}}
+h2{font-size:22px;margin:40px 0 10px;padding-top:12px;border-top:1px solid var(--line);scroll-margin-top:72px}
+h2 .n{font:700 14px var(--mono);color:var(--accent);margin-right:10px}
+h3{font-size:17px;margin:24px 0 6px}
+p,li{max-width:68ch}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+.tbl{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font:700 12px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);border-bottom:2px solid var(--line)}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:14px}
+td.he{direction:rtl;text-align:right;font-weight:700;white-space:nowrap}
+code,kbd{font:600 14px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.note,.warn{border-left:4px solid var(--zone);background:var(--note);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.warn{border-left-color:var(--warn)}
+.note b,.warn b{display:block;font:700 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.warn b{color:var(--warn)} .note b{color:var(--zone)}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:16px 0}
+figure{margin:0}
+figure img{width:100%;height:auto;max-width:100%;border-radius:14px;border:1px solid var(--line);display:block}
+figcaption{font-size:13px;color:var(--dim);margin-top:6px;line-height:1.4}
+.hero{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:24px;align-items:start;margin:16px 0}
+@media (max-width:600px){.hero{grid-template-columns:1fr}.hero figure{max-width:280px}}
+.callouts{margin:0;padding-left:0;list-style:none;counter-reset:c}
+.callouts li{counter-increment:c;position:relative;padding-left:34px;margin:8px 0}
+.callouts li::before{content:counter(c);position:absolute;left:0;top:1px;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--paper);
+  font:700 13px/24px var(--sans);text-align:center}
+.ic{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:#172229;color:#eef4f5;vertical-align:middle}
+.ic.pink{background:#ff3b8b;color:#fff}
+.ic svg{width:18px;height:18px}
+.check li{list-style:none;position:relative;padding-left:28px}
+.check{padding-left:0}
+.check li::before{content:"";position:absolute;left:2px;top:5px;width:14px;height:14px;border:2px solid var(--ink);border-radius:3px}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--dim)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media print{body{background:#fff}.wrap{max-width:none;padding:0}.bar,.back{display:none}h2{break-after:avoid}figure,table{break-inside:avoid}}
+
+.bar .lang{display:inline-grid;place-items:center;min-width:44px;padding:0 8px;text-decoration:none;flex:none;font-weight:700}
+.dim{color:var(--dim);font-size:13px}
+.ui-note{font-size:14px;color:var(--dim)}
+/* right-to-left adjustments */
+[dir=rtl] ul,[dir=rtl] ol{padding-left:0;padding-right:22px}
+[dir=rtl] nav ol{padding-left:0;padding-right:22px}
+[dir=rtl] th,[dir=rtl] td{text-align:right}
+[dir=rtl] h2 .n{margin-right:0;margin-left:10px}
+[dir=rtl] .callouts{padding-right:0}
+[dir=rtl] .callouts li{padding-left:0;padding-right:34px}
+[dir=rtl] .callouts li::before{left:auto;right:0}
+[dir=rtl] .check{padding-right:0}
+[dir=rtl] .check li{padding-left:0;padding-right:28px}
+[dir=rtl] .check li::before{left:auto;right:2px}
+[dir=rtl] .note,[dir=rtl] .warn{border-left:0;border-right:4px solid var(--zone);border-radius:8px 0 0 8px}
+[dir=rtl] .warn{border-right-color:var(--warn)}
+[dir=rtl] .note b,[dir=rtl] .warn b{letter-spacing:0;font-family:var(--sans);font-size:13px}
+[dir=rtl] th{letter-spacing:0}
+[dir=rtl] header .k,[dir=rtl] nav b{letter-spacing:0;font-family:var(--sans);font-size:13px}
+[dir=rtl] td.num{direction:ltr;text-align:right}
+</style>
+</head>
+<body>
+<div class="wrap" id="top">
+<div class="bar" role="navigation" aria-label="ניווט במדריך">
+  <a class="mapbtn" href="./">→ למפה</a>
+  <label class="sel"><span class="vh">מעבר לפרק</span>
+    <select id="jump" aria-label="מעבר לפרק"><option value="">פרקים…</option></select></label>
+  <a class="lang" href="manual.html" lang="en" aria-label="English version">EN</a>
+  <a class="up" href="#top" aria-label="לראש המדריך">↑</a>
+</div>
+
+<header style="padding-top:18px">
+  <div class="k">מדריך למשתמש</div>
+  <h1>מפה נעה – סנוניות</h1>
+  <p>מפה נעה לטלפון לאזורי האימון של הסנוניות: אזורים, נקודות דיווח, מיקום המטוס ונתיב הטיסה. אחרי שהמפה ירדה לטלפון, היא עובדת גם בלי קליטה סלולרית.</p>
+</header>
+
+<div class="warn"><b>כלי עזר להתמצאות בלבד</b>האפליקציה אינה ציוד ניווט מאושר ואינה מחליפה את מכשירי המטוס, המפות המאושרות או הוראות הפיקוח. גבולות האזורים לקוחים ממפה מספטמבר 2010 וייתכן שהשתנו. יש לבדוק בפרסומים העדכניים לפני טיסה.</div>
+
+<p class="ui-note">הכפתורים וההודעות באפליקציה כתובים באנגלית. במדריך הם מופיעים כפי שהם נראים על המסך, למשל <bdi lang="en">Track up</bdi>.</p>
+
+<nav id="contents" aria-label="תוכן עניינים"><b>תוכן עניינים</b>
+<ol start="0">
+  <li><a href="#quick">התחלה מהירה</a></li>
+  <li><a href="#setup">התקנה ראשונה</a></li>
+  <li><a href="#screen">המסך</a></li>
+  <li><a href="#follow">מעקב וכיוון המפה</a></li>
+  <li><a href="#gestures">מחוות מגע</a></li>
+  <li><a href="#modes">מצבי מפה</a></li>
+  <li><a href="#track">נתיב הטיסה</a></li>
+  <li><a href="#data">אזורים ונקודות דיווח</a></li>
+  <li><a href="#offline">שימוש בלי קליטה</a></li>
+  <li><a href="#messages">הודעות</a></li>
+  <li><a href="#checklist">רשימת בדיקה לפני טיסה</a></li>
+  <li><a href="#trouble">פתרון בעיות</a></li>
+  <li><a href="#accuracy">דיוק ומקורות</a></li>
+  <li><a href="#privacy">פרטיות ועדכונים</a></li>
+</ol></nav>
+
+<h2 id="quick"><span class="n">00</span>התחלה מהירה</h2>
+<p>הגרסה הקצרה. כל נושא מוסבר בפירוט בפרקים הבאים.</p>
+<h3>פעם אחת, על הקרקע עם קליטה</h3>
+<ol class="callouts">
+  <li>פתחו את <code dir="ltr">zivoznovich.github.io/snoniyot-map</code> בספארי (אייפון) או בכרום (אנדרואיד) ו<b>אשרו גישה למיקום</b>.</li>
+  <li><b>הוסיפו למסך הבית</b>, ומעכשיו פתחו את האפליקציה רק מהאייקון.</li>
+  <li>השאירו אותה פתוחה כדקה, עד שמופיעה ההודעה <bdi lang="en">✓ Map ready for offline use</bdi>.</li>
+  <li>בדקו שהמטוס מופיע במיקום האמיתי שלכם.</li>
+</ol>
+<h3>בטיסה</h3>
+<div class="tbl"><table>
+<thead><tr><th>כדי…</th><th>עשו כך</th></tr></thead>
+<tbody>
+<tr><td>לראות באיזה אזור אתם</td><td>תג <bdi lang="en"><b>ZONE</b></bdi> בראש המסך</td></tr>
+<tr><td>לעבור בין צפון למעלה לכיוון טיסה למעלה</td><td>לחיצה על כפתור <b>המיקום</b> הוורוד (למטה מימין)</td></tr>
+<tr><td>לחזור למטוס</td><td>לחיצה על כפתור הכוונת האפור, או המתנה של 20 שניות</td></tr>
+<tr><td>לחזור מהר לצפון למעלה</td><td>לחיצה על <b>המצפן</b> (למעלה משמאל)</td></tr>
+<tr><td>להחליף רקע</td><td>כפתור <b>השכבות</b>: לוויין ← טופו ← ללא רקע</td></tr>
+<tr><td>להציג או להסתיר את הנתיב</td><td>כפתור <b>הנתיב</b></td></tr>
+<tr><td>לנקות את הנתיב</td><td>שתי לחיצות על כפתור <b>הפח</b></td></tr>
+<tr><td>זום</td><td>צביטה, הקשה כפולה (הגדלה), או הקשה בשתי אצבעות (הקטנה)</td></tr>
+<tr><td>לפתוח את המדריך</td><td>לחיצה על <b>?</b> (למעלה מימין)</td></tr>
+</tbody></table></div>
+<div class="note"><b>חשוב לזכור</b>השאירו את האפליקציה על המסך לאורך כל הטיסה, כי טלפונים עוצרים אותה ברקע. אם מפת הרקע לא מופיעה, עברו ל<b>ללא רקע</b>. האזורים והנקודות מוצגים תמיד.</div>
+
+<h2 id="setup"><span class="n">01</span>התקנה ראשונה</h2>
+<p>עושים את זה פעם אחת, על הקרקע, עם קליטה סלולרית או Wi-Fi.</p>
+<ol>
+  <li>פתחו את <code dir="ltr">zivoznovich.github.io/snoniyot-map</code> ב<b>ספארי</b> (אייפון) או ב<b>כרום</b> (אנדרואיד).</li>
+  <li>כשהטלפון שואל על מיקום, בחרו <b>אפשר</b>. אם בחרתם <b>בזמן השימוש ביישום</b>, ודאו גם ש<b>מיקום מדויק</b> מופעל.</li>
+  <li>הוסיפו את האפליקציה למסך הבית. באייפון: <b>שתף</b> ← <b>הוסף למסך הבית</b>. באנדרואיד: <b>⋮</b> ← <b>הוספה למסך הבית</b> (או <b>התקנת אפליקציה</b>).</li>
+  <li>מעכשיו <b>פתחו את האפליקציה רק מהאייקון במסך הבית</b>. באייפון יש לאייקון אחסון נפרד מספארי.</li>
+  <li>השאירו את האפליקציה פתוחה כדקה. בפינה השמאלית התחתונה מופיע <bdi lang="en">Downloading map NN%</bdi>, ובסוף <bdi lang="en">✓ Map ready for offline use</bdi>.</li>
+  <li>בדיקה: הפעילו מצב טיסה, סגרו את האפליקציה לגמרי ופתחו אותה שוב. המפה, האזורים והנקודות צריכים להופיע.</li>
+</ol>
+
+<h3>אם הגישה למיקום חסומה</h3>
+<p>אם הטלפון חוסם את המיקום, נפתח בתחתית המסך כרטיס עם השלבים שלמטה. בצעו אותם ולחצו <bdi lang="en"><b>Try again</b></bdi>.</p>
+<div class="hero">
+  <figure><img src="manual/loc.jpg" width="780" height="1328" alt="כרטיס בקשת גישה למיקום עם שלושה שלבים וכפתור Try again" loading="lazy"><figcaption>כרטיס העזרה למיקום.</figcaption></figure>
+  <div>
+    <ol>
+      <li><b>הגדרות</b> ← <b>פרטיות ואבטחה</b> ← <b>שירותי מיקום</b>: מופעל.</li>
+      <li>באותו מסך ← <b>אתרי Safari</b> (או <b>Chrome</b>) ← <b>בזמן השימוש ביישום</b>, ו<b>מיקום מדויק</b> מופעל.</li>
+      <li>בספארי: <b>aA</b> או <b>⋯</b> ← <b>הגדרות אתר</b> ← <b>מיקום</b> ← <b>אפשר</b>.</li>
+    </ol>
+    <p>כש<b>מיקום מדויק</b> כבוי, הטלפון מדווח מיקום שיכול לסטות בקילומטרים. האפליקציה תציג אז <bdi lang="en">Location is approximate – turn on Precise Location</bdi>.</p>
+  </div>
+</div>
+
+<h2 id="screen"><span class="n">02</span>המסך</h2>
+<p>המפה ממלאת את כל המסך. כל השאר הם רכיבים קטנים מעליה, שאפשר להגיע אליהם עם האגודל.</p>
+<div class="hero">
+  <figure><img src="manual/main.jpg" width="780" height="1328" alt="המסך הראשי עם תג האזור, כפתור העזרה, המטוס, הנתיב והכפתורים" loading="lazy"><figcaption>המסך הראשי, צפון למעלה, מצב ללא רקע.</figcaption></figure>
+  <ol class="callouts">
+    <li><b>תג האזור</b> (למעלה במרכז). מציג <bdi lang="en">ZONE</bdi> ואת מספר האזור שבו אתם נמצאים. מחוץ לאזורים הוא מוסתר. האזור הנוכחי גם מסומן על המפה בגוון כהה יותר.</li>
+    <li><b>מצפן</b> (למעלה משמאל). מופיע רק כשהמפה מסובבת. המחט האדומה מצביעה לצפון האמיתי. לחיצה עליו מחזירה לצפון למעלה.</li>
+    <li><b>עזרה</b> <span class="ic" style="border-radius:50%">?</span> (למעלה מימין). פותח את המדריך.</li>
+    <li><b>המטוס</b>. צללית של סנונית (Grob G 120A), שמצוירת בדיוק על מיקום ה-GPS ומצביעה לכיוון ההתקדמות מעל הקרקע. העיגול הבהיר סביבה מראה את דיוק ה-GPS.</li>
+    <li><b>נתיב הטיסה</b>. קו ורוד שמראה איפה טסתם.</li>
+    <li><b>כפתורים</b> (למטה מימין), מלמעלה למטה: מצב מפה, הצגה או הסתרה של הנתיב, ניקוי הנתיב, ומיקום. הם מוסברים בפרקים הבאים.</li>
+    <li><b>סרגל קנה מידה</b> (למטה משמאל), במיילים ימיים.</li>
+  </ol>
+</div>
+
+<h3>הכפתורים במבט אחד</h3>
+<div class="tbl"><table>
+<thead><tr><th>כפתור</th><th>מה הוא עושה</th></tr></thead>
+<tbody>
+<tr><td><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/></svg></span> מצב מפה</td><td>כל לחיצה עוברת: לוויין ← טופו ← ללא רקע. שם המצב החדש מופיע לרגע. האפליקציה זוכרת את הבחירה.</td></tr>
+<tr><td><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 18H14a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h5.8"/></svg></span> נתיב</td><td>מציג או מסתיר את נתיב הטיסה. כשהנתיב מוסתר, האייקון מעומעם ומחוק בקו. הנתיב ממשיך להירשם גם כשהוא מוסתר.</td></tr>
+<tr><td><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l.9 12.5h9.2L17.5 7"/></svg></span> ניקוי</td><td>מוחק את הנתיב. צריך שתי לחיצות: הראשונה צובעת את הכפתור באדום, והשנייה, תוך 3 שניות, מוחקת.</td></tr>
+<tr><td><span class="ic pink"><svg viewBox="0 0 24 24"><path d="M12 2.8 19.2 20 12 16.2 4.8 20z" fill="currentColor"/></svg></span> מיקום</td><td>ממרכז את המפה על המטוס ומחליף בין צפון למעלה לכיוון טיסה למעלה. ראו פרק 3.</td></tr>
+</tbody></table></div>
+
+<h2 id="follow"><span class="n">03</span>מעקב וכיוון המפה</h2>
+<p>כפתור המיקום עובד כמו באפליקציות טיסה מוכרות. האייקון שלו מראה את המצב הנוכחי.</p>
+<div class="tbl"><table>
+<thead><tr><th>מצב</th><th>הכפתור</th><th>מה קורה במפה</th><th>לחיצה על הכפתור…</th></tr></thead>
+<tbody>
+<tr><td><b>צפון למעלה</b><br><bdi lang="en" class="dim">North up</bdi></td><td>ורוד, חץ עם N</td><td>המטוס במרכז, הצפון למעלה, וסמל המטוס מסתובב לפי כיוון ההתקדמות.</td><td>עוברת לכיוון טיסה למעלה</td></tr>
+<tr><td><b>כיוון טיסה למעלה</b><br><bdi lang="en" class="dim">Track up</bdi></td><td>ורוד, חץ ניווט</td><td>המטוס במרכז ומצביע תמיד למעלה, והמפה מסתובבת סביבו. המצפן מופיע.</td><td>עוברת לצפון למעלה</td></tr>
+<tr><td><b>ללא מעקב</b></td><td>אפור, כוונת</td><td>המפה נשארת איפה שהשארתם אותה.</td><td>ממרכזת שוב על המטוס, בכיוון האחרון שהיה</td></tr>
+</tbody></table></div>
+<div class="shots">
+  <figure><img src="manual/track.jpg" width="780" height="1328" alt="מצב כיוון טיסה למעלה עם מצפן" loading="lazy"><figcaption>כיוון טיסה למעלה: המטוס מצביע למעלה והמצפן מראה את הצפון.</figcaption></figure>
+  <figure><img src="manual/free.jpg" width="780" height="1328" alt="המפה הוזזה ביד, כפתור כוונת אפור" loading="lazy"><figcaption>אחרי הזזה באצבע אחת: המעקב נעצר והכפתור הופך לאפור.</figcaption></figure>
+</div>
+<ul>
+  <li><b>הזזת המפה באצבע אחת</b> עוצרת את המעקב. אם לא נוגעים במפה <b>20 שניות</b>, היא חוזרת למטוס לבד.</li>
+  <li><b>צביטה וסיבוב</b> לא עוצרים את המעקב. המטוס נשאר במרכז בזמן הזום או הסיבוב.</li>
+  <li><b>סיבוב ידני</b> (סיבוב בשתי אצבעות) יוצא ממצב כיוון טיסה למעלה ומשאיר את המפה בזווית שבחרתם. לחיצה על המצפן או על כפתור המיקום מחזירה לצפון למעלה.</li>
+  <li><b>כיוון הטיסה</b> הוא כיוון ההתקדמות מעל הקרקע לפי ה-GPS, ולא הכיוון המגנטי. הוא כולל את סחיפת הרוח. מתחת לכ-5 קשר (הסעה או חניה) המפה לא מסתובבת, כדי שרעשי GPS לא יסובבו אותה.</li>
+</ul>
+
+<h2 id="gestures"><span class="n">04</span>מחוות מגע</h2>
+<div class="tbl"><table>
+<thead><tr><th>מחווה</th><th>פעולה</th></tr></thead>
+<tbody>
+<tr><td>גרירה באצבע אחת</td><td>הזזת המפה (עוצרת את המעקב)</td></tr>
+<tr><td>צביטה</td><td>זום פנימה והחוצה</td></tr>
+<tr><td>סיבוב בשתי אצבעות</td><td>סיבוב המפה</td></tr>
+<tr><td>הקשה כפולה</td><td>זום פנימה בדרגה אחת</td></tr>
+<tr><td>הקשה בשתי אצבעות</td><td>זום החוצה בדרגה אחת</td></tr>
+<tr><td>הקשה כפולה וגרירה למטה או למעלה</td><td>זום ביד אחת: גרירה למטה מגדילה, למעלה מקטינה</td></tr>
+</tbody></table></div>
+<h3>מה משתנה עם הזום</h3>
+<p>התוויות קטנות כשמתרחקים, כדי שהמפה לא תהיה עמוסה. בזום רחוק שמות הנקודות נעלמים, ונשארים רק המשולשים ומספרי האזורים. כשרואים את כל הארץ, נשארים רק קווי האזורים והמספרים. המטוס נשאר תמיד באותו גודל.</p>
+<figure style="max-width:260px;margin:12px 0"><img src="manual/wide.jpg" width="780" height="1328" alt="זום רחוק עם מספרי אזורים ומשולשים קטנים" loading="lazy"><figcaption>זום רחוק: רק מספרי אזורים ומשולשים קטנים.</figcaption></figure>
+
+<h2 id="modes"><span class="n">05</span>מצבי מפה</h2>
+<div class="tbl"><table>
+<thead><tr><th>מצב</th><th>רקע</th><th>מתאים ל…</th></tr></thead>
+<tbody>
+<tr><td><b>לוויין</b><br><bdi lang="en" class="dim">Satellite</bdi></td><td>צילום לוויין של Esri, מעומעם מעט כדי שהאזורים יבלטו.</td><td>זיהוי שדות, יישובים וכבישים מתחתיכם.</td></tr>
+<tr><td><b>טופו</b><br><bdi lang="en" class="dim">Topo</bdi></td><td>מפה טופוגרפית של Esri.</td><td>כבישים, שמות מקומות ותבליט.</td></tr>
+<tr><td><b>ללא רקע</b><br><bdi lang="en" class="dim">No background</bdi></td><td>שחור, רק אזורים ונקודות דיווח.</td><td>התמונה הכי נקייה, הכי פחות סנוור והכי מעט צריכת סוללה. עובד בלי שום הורדה.</td></tr>
+</tbody></table></div>
+
+<h2 id="track"><span class="n">06</span>נתיב הטיסה</h2>
+<ul>
+  <li>הנתיב מתחיל להירשם כשהאפליקציה מקבלת את מיקום ה-GPS הראשון. נקודה חדשה נוספת כל 15 מטר של תנועה.</li>
+  <li>הנתיב נשמר רק כל עוד האפליקציה פתוחה. אם סוגרים אותה, או שהטלפון עוצר אותה ברקע, מתחיל נתיב חדש.</li>
+  <li>הסתרת הנתיב לא עוצרת את הרישום. כשמציגים אותו שוב, כל הטיסה מופיעה.</li>
+  <li>הניקוי דורש שתי לחיצות תוך 3 שניות, כדי שנגיעה מקרית בטיסה לא תמחק אותו.</li>
+</ul>
+<figure style="max-width:260px;margin:12px 0"><img src="manual/clear.jpg" width="780" height="1328" alt="כפתור הניקוי באדום עם ההודעה Tap again to clear track" loading="lazy"><figcaption>לחיצה ראשונה על ניקוי: הכפתור מאדים ומבקש לחיצה נוספת.</figcaption></figure>
+
+<h2 id="data"><span class="n">07</span>אזורים ונקודות דיווח</h2>
+<h3>אזורים</h3>
+<p>שמונה אזורי אימון מסומנים בקו כחול עם המספר שלהם: <b>601, 602, 603, 604, 605, 606, 607</b> ו-<b>681</b>. גובהי האזורים לא מוצגים בכוונה, ולגביהם יש להשתמש במפות המאושרות.</p>
+<h3>נקודות דיווח</h3>
+<p>כל נקודת דיווח מסומנת במשולש שחור (לבן במצב ללא רקע), ומרכז המשולש יושב על הנקודה. השמות מוצגים בעברית. הקואורדינטות ב-WGS84, אותה מערכת של ה-GPS.</p>
+<div class="tbl"><table>
+<thead><tr><th>שם</th><th>קו רוחב</th><th>קו אורך</th><th>עשרוני</th></tr></thead>
+<tbody><tr><td class=he>רוחמה</td><td class=num>N31°29.604′</td><td class=num>E34°42.307′</td><td class=num>31.49339, 34.70512</td></tr><tr><td class=he>סעד</td><td class=num>N31°27.834′</td><td class=num>E34°32.079′</td><td class=num>31.46391, 34.53465</td></tr><tr><td class=he>בית קמה</td><td class=num>N31°26.578′</td><td class=num>E34°46.012′</td><td class=num>31.44297, 34.76686</td></tr><tr><td class=he>בית הגדי</td><td class=num>N31°24.866′</td><td class=num>E34°36.415′</td><td class=num>31.41443, 34.60692</td></tr><tr><td class=he>שובל</td><td class=num>N31°24.489′</td><td class=num>E34°44.783′</td><td class=num>31.40815, 34.74638</td></tr><tr><td class=he>מלילות</td><td class=num>N31°23.365′</td><td class=num>E34°35.751′</td><td class=num>31.38942, 34.59586</td></tr><tr><td class=he>משמר הנגב</td><td class=num>N31°22.086′</td><td class=num>E34°42.780′</td><td class=num>31.36810, 34.71301</td></tr><tr><td class=he>ברוש</td><td class=num>N31°21.874′</td><td class=num>E34°37.128′</td><td class=num>31.36457, 34.61880</td></tr><tr><td class=he>בטחה</td><td class=num>N31°19.915′</td><td class=num>E34°37.892′</td><td class=num>31.33191, 34.63153</td></tr><tr><td class=he>אשל הנשיא</td><td class=num>N31°19.886′</td><td class=num>E34°41.980′</td><td class=num>31.33144, 34.69966</td></tr><tr><td class=he>רנן</td><td class=num>N31°19.730′</td><td class=num>E34°35.851′</td><td class=num>31.32883, 34.59751</td></tr><tr><td class=he>תפרח</td><td class=num>N31°19.373′</td><td class=num>E34°39.956′</td><td class=num>31.32288, 34.66593</td></tr><tr><td class=he>פטיש</td><td class=num>N31°19.260′</td><td class=num>E34°33.559′</td><td class=num>31.32101, 34.55931</td></tr><tr><td class=he>צומת מעון</td><td class=num>N31°18.706′</td><td class=num>E34°26.347′</td><td class=num>31.31177, 34.43912</td></tr><tr><td class=he>קו מתח</td><td class=num>N31°17.410′</td><td class=num>E34°35.819′</td><td class=num>31.29017, 34.59699</td></tr><tr><td class=he>גשר</td><td class=num>N31°16.819′</td><td class=num>E34°38.941′</td><td class=num>31.28031, 34.64902</td></tr><tr><td class=he>תימן</td><td class=num>N31°16.765′</td><td class=num>E34°42.772′</td><td class=num>31.27941, 34.71286</td></tr></tbody></table></div>
+<p style="font-size:14px;color:var(--dim)">הקואורדינטות נמדדו ממרכזי המשולשים במפה 1:100,000. במפה הזו כל משולש מכסה כ-700 מטר בשטח, אז הדיוק הוא של המיקום המודפס ולא של נקודה מדודה.</p>
+
+<h2 id="offline"><span class="n">08</span>שימוש בלי קליטה</h2>
+<p>הקליטה הסלולרית בגובה באה והולכת, והאפליקציה בנויה לעבוד בלעדיה.</p>
+<ul>
+  <li><b>האפליקציה עצמה</b> (אזורים, נקודות, כפתורים והמדריך) נשמרת בטלפון בפתיחה הראשונה.</li>
+  <li><b>רקעי הלוויין והטופו</b> של אזור האימונים יורדים אוטומטית ברקע בכל פעם שיש קליטה. מדובר בכ-2,300 תמונות קטנות, מזום של כל הארץ ועד פירוט של כ-1:50,000. בסיום מופיעה ההודעה <bdi lang="en">✓ Map ready for offline use</bdi>. הורדה שנקטעה ממשיכה לבד בפעם הבאה, והמפה מתרעננת כל 60 יום.</li>
+  <li><b>בזום עמוק יותר</b> מהפירוט שירד, הרקע מוגדל ונראה מעט רך, אבל אף פעם לא ריק.</li>
+  <li><b>מחוץ לאזור האימונים</b> הרקע נטען רק כשיש קליטה. האזורים, הנקודות והמיקום שלכם מוצגים תמיד.</li>
+  <li><b>ה-GPS לא צריך קליטה.</b> ברוב הטלפונים הוא עובד גם במצב טיסה.</li>
+</ul>
+<div class="note"><b>אייפון</b>לספארי ולאפליקציה שבמסך הבית יש אחסון נפרד. הורידו את המפה מתוך האפליקציה שבמסך הבית, זו שאיתה תטוסו.</div>
+
+<h2 id="messages"><span class="n">09</span>הודעות</h2>
+<div class="tbl"><table>
+<thead><tr><th>הודעה</th><th>משמעות</th><th>מה לעשות</th></tr></thead>
+<tbody>
+<tr><td><bdi lang="en">Waiting for GPS…</bdi></td><td>עדיין אין מיקום.</td><td>להמתין. ליד חלון זה הכי טוב. התחלה קרה יכולה לקחת עד דקה.</td></tr>
+<tr><td><bdi lang="en">No GPS update</bdi></td><td>אין מיקום חדש כבר יותר מ-10 שניות. המטוס קפוא במיקום האחרון.</td><td>לקרב את הטלפון לחופה, ולבדוק שהגישה למיקום עדיין מאושרת.</td></tr>
+<tr><td><bdi lang="en">Location is approximate – turn on Precise Location</bdi></td><td>הטלפון נותן מיקום גס (סטייה של יותר מ-500 מטר).</td><td>להפעיל מיקום מדויק (פרק 1).</td></tr>
+<tr><td>כרטיס <bdi lang="en">Location access needed</bdi></td><td>הטלפון חסם את המיקום.</td><td>לבצע את שלושת השלבים וללחוץ <bdi lang="en"><b>Try again</b></bdi>.</td></tr>
+<tr><td><bdi lang="en">Outside training area – map here needs signal</bdi></td><td>אתם מחוץ לאזור שירד לטלפון.</td><td>אין צורך לעשות כלום. הרקע ייטען כשתהיה קליטה.</td></tr>
+<tr><td><bdi lang="en">Base map unavailable – no signal</bdi></td><td>תמונות הרקע באזור האימונים לא נטענו.</td><td>ההורדה עוד לא הסתיימה. עברו ל<b>ללא רקע</b>, ותנו להורדה להסתיים על הקרקע.</td></tr>
+<tr><td><bdi lang="en">Downloading map NN%</bdi></td><td>הורדה לשימוש בלי קליטה מתבצעת.</td><td>להשאיר את האפליקציה פתוחה עד הסוף.</td></tr>
+</tbody></table></div>
+
+<h2 id="checklist"><span class="n">10</span>רשימת בדיקה לפני טיסה</h2>
+<ul class="check">
+  <li>האפליקציה נפתחה מהאייקון במסך הבית.</li>
+  <li>ההודעה <bdi lang="en">✓ Map ready for offline use</bdi> הופיעה לפחות פעם אחת בטלפון הזה (לא נדרש במצב ללא רקע).</li>
+  <li>המטוס מופיע במיקום האמיתי על הרחבה, ועיגול הדיוק קטן.</li>
+  <li>בחרתם מצב מפה וכיוון (צפון למעלה או כיוון טיסה למעלה).</li>
+  <li>ניקיתם את הנתיב מהטיסה הקודמת, אם רוצים נתיב נקי.</li>
+  <li>הסוללה טעונה או שמחובר כבל. GPS עם מסך דלוק צורך סוללה באופן מורגש.</li>
+  <li>נעילת המסך האוטומטית כבויה, או שבדקתם שהמסך נשאר דלוק כשהאפליקציה פתוחה.</li>
+  <li>הטלפון מקובע היטב, קרוב לחופה, ולא מסתיר אף מכשיר.</li>
+</ul>
+
+<h2 id="trouble"><span class="n">11</span>פתרון בעיות</h2>
+<h3>המטוס לא מופיע</h3>
+<p>המיקום כבוי או לא מאושר. בצעו את השלבים בפרק 1. באייפון בדקו גם את <b>שירותי מיקום</b> וגם את ההגדרה של ספארי.</p>
+<h3>המטוס קופץ או נמצא במקום הלא נכון</h3>
+<p>ל-GPS יש קליטה חלשה. אם עיגול הדיוק גדול, תנו לטלפון שדה ראייה פתוח לשמיים. בדקו ש<b>מיקום מדויק</b> מופעל.</p>
+<h3>המפה הופכת ללבנה או אפורה בזום</h3>
+<p>הרקע של האזור או של הזום הזה לא ירד, ואין קליטה. עברו ל<b>ללא רקע</b>, או תנו להורדה להסתיים על הקרקע.</p>
+<h3>המסך נכבה</h3>
+<p>האפליקציה מבקשת מהטלפון להשאיר את המסך דלוק, אבל יש טלפונים ומצבי חיסכון שמסרבים. הגדירו נעילה אוטומטית ל"אף פעם" לזמן הטיסה, וכבו את מצב צריכת חשמל נמוכה.</p>
+<h3>האפליקציה הפסיקה להתעדכן ברקע</h3>
+<p>טלפונים עוצרים אפליקציות רשת שלא נמצאות על המסך. השאירו את האפליקציה בחזית לאורך כל הטיסה.</p>
+<h3>לא רואים את הגרסה האחרונה</h3>
+<p>סגרו את האפליקציה לגמרי ופתחו אותה שוב כשיש קליטה. אם צריך, עשו זאת פעמיים: בפעם הראשונה הגרסה החדשה יורדת, ובשנייה היא מוצגת.</p>
+<h3>המפה מסובבת ואני רוצה צפון למעלה</h3>
+<p>לחצו על המצפן למעלה משמאל, או על כפתור המיקום עד שמופיע החץ עם N.</p>
+
+<h2 id="accuracy"><span class="n">12</span>דיוק ומקורות</h2>
+<ul>
+  <li><b>מקור:</b> מפת אזורי טיסה סנוניות, 1:100,000, ספטמבר 2010.</li>
+  <li><b>עיגון:</b> הסריקה הותאמה לרשת ה-UTM של קילומטר אחד שמודפסת על המפה (אזור 36N, מערכת ED50, כ-2,200 נקודות חיתוך). העיוות של הסריקה תוקן ריבוע אחר ריבוע, והכל הומר ל-WGS84. קווי האורך והרוחב המודפסים שימשו לבדיקה בלתי תלויה.</li>
+  <li><b>גבולות האזורים:</b> כל צלע הותאמה למרכז הקו הכחול המודפס. גבולות מעוגלים מתוארים בקטעים קצרים.</li>
+  <li><b>דיוק צפוי:</b> כ-10–50 מטר בשטח, לפי איכות הסריקה והמפה המקורית. לפני הטיסה הראשונה, בדקו על הקרקע שהמטוס מופיע במקום הנכון.</li>
+  <li><b>GPS:</b> GPS של טלפון מדויק בדרך כלל ל-5–15 מטר בשטח פתוח. בתוך תא טייס זה יכול להיות פחות.</li>
+  <li><b>רקעים:</b> הלוויין והטופו הם שירותי מפות של Esri. לדיוק שלהם אין קשר לאזורים, והוא משתנה.</li>
+</ul>
+
+<h2 id="privacy"><span class="n">13</span>פרטיות ועדכונים</h2>
+<ul>
+  <li>המיקום שלכם לא יוצא מהטלפון. לאפליקציה אין שרת, אין חשבון ואין מעקב.</li>
+  <li>תמונות הרקע מתבקשות מ-Esri לפי אריחי מפה. כמו בכל מפה מקוונת, הבקשות מראות איזה אזור מוצג, אבל לא כוללות את המיקום שלכם.</li>
+  <li>ההגדרות (מצב מפה, כיוון, הצגת הנתיב) נשמרות רק בטלפון.</li>
+  <li>עדכונים מתפרסמים באותה כתובת ונטענים אוטומטית בפתיחה הבאה עם קליטה.</li>
+</ul>
+
+<footer>
+  מפה נעה – סנוניות · גרסה 2026-11-27 · מנוע מפה: MapLibre GL JS · רקעים: Esri, Maxar, HERE, תורמי OpenStreetMap.<br>
+  כלי עזר להתמצאות בלבד. לא לניווט ראשי.
+</footer>
+</div>
+<script>
+// fill the chapter menu from the headings; add a "contents" link after each chapter
+const sel=document.getElementById('jump');
+document.querySelectorAll('h2[id]').forEach(h=>{ const o=document.createElement('option'); o.value=h.id;
+  o.textContent=h.querySelector('.n').textContent+'  '+h.textContent.replace(h.querySelector('.n').textContent,'').trim(); sel.appendChild(o); });
+sel.addEventListener('change',()=>{ if(sel.value){ document.getElementById(sel.value).scrollIntoView(); history.replaceState(null,'','#'+sel.value); } sel.value=''; });
+document.querySelectorAll('h2[id]').forEach(h=>{ let n=h.nextElementSibling, lastEl=h;
+  while(n && n.tagName!=='H2' && n.tagName!=='FOOTER'){ lastEl=n; n=n.nextElementSibling; }
+  const a=document.createElement('a'); a.className='back'; a.href='#contents'; a.textContent='↑ תוכן עניינים'; lastEl.after(a); });
+</script>
+</body>
+</html>
