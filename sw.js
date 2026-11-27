@@ -1,5 +1,5 @@
 // App shell: versioned cache. Map tiles: long-lived cache, cache-first, so they work without signal.
-const APP='mm-app-v9', TILES='mm-tiles-v1';
+const APP='mm-app-v11', TILES='mm-tiles-v1';
 self.addEventListener('install',e=>{e.waitUntil(caches.open(APP).then(c=>c.addAll(['./','index.html','manifest.webmanifest','icon.png'])));self.skipWaiting();});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(n=>n!==APP&&n!==TILES).map(n=>caches.delete(n)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{
@@ -10,7 +10,9 @@ self.addEventListener('fetch',e=>{
       const r=await fetch(e.request.url,{mode:'cors'}); if(r.ok) c.put(e.request.url,r.clone()); return r;}));
     return;
   }
+  // App files: newest version when online, saved copy when offline.
   if(e.request.method==='GET' && u.origin===location.origin){
-    e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request)));
+    e.respondWith(fetch(e.request).then(r=>{ if(r.ok){ const c=r.clone(); caches.open(APP).then(x=>x.put(e.request,c)); } return r; })
+      .catch(()=>caches.match(e.request,{ignoreSearch:true})));
   }
 });
