@@ -351,6 +351,8 @@ sel.addEventListener('change',()=>{ if(sel.value){ document.getElementById(sel.v
 document.querySelectorAll('h2[id]').forEach(h=>{ let n=h.nextElementSibling, lastEl=h;
   while(n && n.tagName!=='H2' && n.tagName!=='FOOTER'){ lastEl=n; n=n.nextElementSibling; }
   const a=document.createElement('a'); a.className='back'; a.href='#contents'; a.textContent='↑ Contents'; lastEl.after(a); });
+// inside the app the manual is a layer over the map: "Map" closes it instead of reloading the app
+if(window.parent!==window){ document.querySelector('.mapbtn').addEventListener('click',e=>{ e.preventDefault(); window.parent.postMessage('close-manual','*'); }); }
 </script>
 </body>
 </html>
